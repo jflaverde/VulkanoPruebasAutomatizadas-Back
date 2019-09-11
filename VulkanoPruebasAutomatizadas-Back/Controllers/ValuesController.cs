@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Controller;
 
 namespace VulkanoPruebasAutomatizadas_Back.Controllers
 {
@@ -14,7 +15,9 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            return new string[] { "value1", "value2" };
+            PruebaConexion testCon = new PruebaConexion();
+
+            return new string[] { testCon.TestConnection(), "value2" };
         }
 
         // GET api/values/5
