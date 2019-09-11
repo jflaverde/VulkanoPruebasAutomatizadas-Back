@@ -14,6 +14,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
+            //test
             return new string[] { "value1", "value2" };
         }
 
