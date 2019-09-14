@@ -14,7 +14,10 @@ namespace WorkerCypress
                 //WorkingDirectory = guiProjectDirectory
             };
             var pNpmRunDist = Process.Start(psiNpmRunDist);
-            pNpmRunDist.StandardInput.WriteLine("npx cypress run");
+            pNpmRunDist.StandardInput.WriteLine("cd C:\\Users\\Sistemas\\Pruebas automatizadas\\Taller Cypress");
+
+        
+            pNpmRunDist.StandardInput.WriteLine("npx cypress run .");
             pNpmRunDist.WaitForExit();
             
 
