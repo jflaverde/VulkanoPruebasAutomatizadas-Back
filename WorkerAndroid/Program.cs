@@ -20,8 +20,8 @@ namespace WorkerAndroid
             pNpmRunDist.StandardInput.WriteLine("cd C:\\Users\\Sistemas\\AppData\\Local\\Android\\Sdk\\emulator");
 
             pNpmRunDist.StandardInput.WriteLine("emulator -avd Nexus_5_API_26 -netdelay none -netspeed full");
-
-            Thread.Sleep(30000);
+            //Verificar el snapshot para ejecutar el emulador cuando ya arrancó
+            Thread.Sleep(50000);
 
             var psiNpmRunDist1 = new ProcessStartInfo
             {

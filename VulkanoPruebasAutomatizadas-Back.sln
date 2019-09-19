@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerCypress", "WorkerCypr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerAndroid", "WorkerAndroid\WorkerAndroid.csproj", "{4DD6A78D-8431-4EC9-A815-B23B232512E3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitor", "Monitor\Monitor.csproj", "{0D8C97E7-E76E-4C4E-A95D-C49A84E37D30}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{4DD6A78D-8431-4EC9-A815-B23B232512E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DD6A78D-8431-4EC9-A815-B23B232512E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DD6A78D-8431-4EC9-A815-B23B232512E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D8C97E7-E76E-4C4E-A95D-C49A84E37D30}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D8C97E7-E76E-4C4E-A95D-C49A84E37D30}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D8C97E7-E76E-4C4E-A95D-C49A84E37D30}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D8C97E7-E76E-4C4E-A95D-C49A84E37D30}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
