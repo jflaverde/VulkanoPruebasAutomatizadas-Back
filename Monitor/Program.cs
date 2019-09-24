@@ -14,7 +14,7 @@ namespace Monitor
 
             var mensajeObtenido = CrearMensaje();
 
-            cola.Excha
+            //cola.Excha
 
             cola.BasicPublish(exchange: exchangeName,
                                      routingKey: "hello",
