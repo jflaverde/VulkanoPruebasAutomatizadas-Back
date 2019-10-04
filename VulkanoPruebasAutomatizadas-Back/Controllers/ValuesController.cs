@@ -17,7 +17,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         {
             PruebaConexion testCon = new PruebaConexion();
 
-            return new string[] { testCon.TestConnection(), "value2" };
+            return new string[] { testCon.TestConnection() };
         }
 
         // GET api/values/5

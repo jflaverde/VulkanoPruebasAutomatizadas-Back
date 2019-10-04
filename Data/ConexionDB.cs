@@ -1,6 +1,7 @@
 ﻿using System;
 using QC = System.Data.SqlClient;
 
+
 namespace Data
 {
     public class ConexionDB
