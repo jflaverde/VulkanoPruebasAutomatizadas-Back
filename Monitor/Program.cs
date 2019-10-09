@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Newtonsoft.Json;
 using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
 
 namespace Monitor
 {
@@ -10,17 +12,16 @@ namespace Monitor
         static void Main(string[] args)
         {
 
-            var cola = CrearColaRabbitMQ();
+            //var cola = CrearColaRabbitMQ();
 
-            var mensajeObtenido = CrearMensaje();
+            Dispatcher dispatcher = new Dispatcher();
 
-            //cola.Excha
+            dispatcher.CrearColas();
 
-            cola.BasicPublish(exchange: exchangeName,
-                                     routingKey: "hello",
-                                     basicProperties: null,
-                                     body: mensajeObtenido);
+            dispatcher.ObtenerEstrategias();
 
+
+            //ConsultarRabbitMQ();
 
         }
 
@@ -29,8 +30,42 @@ namespace Monitor
         /// </summary>
         static void ConsultarRabbitMQ()
         {
-            
-            
+
+            //Definir las colas por cada tipo de prueba (check)
+            //Definir el Exhange que hara las veces de Dispatcher (check)
+
+            //Establecer los bindings para crear los routingKey (check)
+            //Primero crear el registro en la base de datos. (check)
+            //Enviar mensaje a la cola por cada tipo de prueba (check)
+
+
+            //Crear workers capaces de leer mensajes encolados
+            //Consultar información complementaria de la estrategia al worker
+            //ejecutar el SCRIPT!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+            var conn = ConnectionRabbitMQ();
+
+            //asumiendo que tenemos la cola, exhange y el routing creado capturamos un mensaje
+
+            var channel = conn.CreateModel();
+            string mensajes = string.Empty;
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (model, ea) =>
+            {
+                var body = ea.Body;
+                mensajes = Encoding.UTF8.GetString(body);
+                Console.WriteLine(" [x] Received {0}", mensajes);
+            };
+
+
+
+            channel.BasicConsume(queue: "QueueTest2",
+                                 autoAck: true,
+                                 consumer: consumer);
+
+
 
         }
 
@@ -58,6 +93,7 @@ namespace Monitor
             factory.HostName = "localhost";
             IConnection conn = factory.CreateConnection();
 
+            
 
             return conn;
         }
@@ -72,21 +108,49 @@ namespace Monitor
             {
                 IModel testModel = conn.CreateModel();
 
-                Dictionary<string, object> dictionary = new Dictionary<string, object>();
+                IModel testModel2 = conn.CreateModel();
 
                 string objeto = "Esta es la segunda prueba de cola";
                 string queueName = "TestQueue2";
-                string exchangeName = "exhange de prueba";
+                string queueName2 = "TestQueue3";
+                string exchangeName = "Exchange1";
 
-                dictionary.Add("Mensaje de prueba", objeto);
+                testModel.ExchangeDeclare(exchangeName, ExchangeType.Direct);
 
-                testModel.ExchangeDeclare(exchangeName, ExchangeType.);
+                testModel.QueueDeclare(queueName, true, false, false, null);
 
-                testModel.QueueDeclare(queueName, true, false, false, dictionary);
+                testModel.QueueBind(queueName, exchangeName, "routing1", null);
 
-                testModel.QueueBind(queueName, exchangeName, "hello", null);
+                testModel2.QueueDeclare(queueName2, true, false, false, null);
 
+                testModel2.QueueBind(queueName2, exchangeName, "routing1", null);
+
+                string objeto2 = "Prueba de la cola 2";
+                string exchangeName2 = "Exchange2";
+
+                testModel2.ExchangeDeclare(exchangeName2, ExchangeType.Direct);
+
+                testModel2.QueueDeclare(queueName2, true, false, false, null);
+
+                testModel2.QueueBind(queueName2, exchangeName2, "routing2", null);
+
+                var body = Encoding.UTF8.GetBytes(objeto);
                 
+
+                testModel.BasicPublish(exchange: exchangeName,
+                        routingKey: "routing1",
+                        basicProperties: null,
+                        body: body
+                    );
+
+                body = Encoding.UTF8.GetBytes(objeto2);
+
+                testModel.BasicPublish(exchange: exchangeName,
+                       routingKey: "routing1",
+                       basicProperties: null,
+                       body: body
+                   );
+
 
                 return testModel;
             }
