@@ -12,6 +12,6 @@ namespace Data.DTO
         public List<ScriptDTO> Scripts { get; set; }
         public string Descripcion { get; set; }
         public EstadoDTO Estado { get; set; }
-
+        public MQTipoPruebaDTO MQTipoPrueba { get; set; }
     }
 }

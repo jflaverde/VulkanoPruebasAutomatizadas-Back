@@ -11,5 +11,10 @@ namespace Data.DTO
         public EstadoDTO Estado { get; set; }
         public AplicacionDTO Aplicacion { get; set; }
         public List<TipoPruebaDTO> TipoPruebas { get; set; }
+
+        public EstrategiaDTO()
+        {
+            TipoPruebas = new List<TipoPruebaDTO>();
+        }
     }
 }

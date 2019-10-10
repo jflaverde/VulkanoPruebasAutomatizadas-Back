@@ -10,8 +10,6 @@ namespace Data.CRUD
     public class EstrategiaBehavior:ConexionDB
     {
 
-
-
         /// <summary>
         /// Crea una estrategia
         /// </summary>
@@ -164,10 +162,15 @@ namespace Data.CRUD
                             T1.DESCRIPCION,
                             T1.ES_WEB,
                             T1.NOMBRE NOMBREAPLICACION,
-                            T1.RUTA_APLICACION
+                            T1.RUTA_APLICACION,
+							T3.TIPOPRUEBA_ID,
+							T4.NOMBRE,
+							T4.MQTIPOPRUEBA_ID
                             FROM ESTRATEGIA T0 
                             INNER JOIN APLICACION T1 ON T0.APLICACION_ID=T1.APLICACION_ID
-                            INNER JOIN ESTADO T2 ON T0.ESTADO_ID=T2.ESTADO_ID");
+                            INNER JOIN ESTADO T2 ON T0.ESTADO_ID=T2.ESTADO_ID
+							LEFT JOIN ESTRATEGIA_TIPOPRUEBA T3 ON T0.ESTRATEGIA_ID=T3.ESTRATEGIA_ID
+							LEFT JOIN TIPOPRUEBA T4 ON T3.TIPOPRUEBA_ID=T4.TIPOPRUEBA_ID");
 
             if(estrategiaID!=0)
             {
@@ -189,24 +192,41 @@ namespace Data.CRUD
                         {
                             while (reader.Read())
                             {
-                                EstrategiaDTO estrategia = new EstrategiaDTO();
-                                estrategia.Estrategia_ID = Convert.ToInt32(reader[0]);
-                                estrategia.Nombre = reader[1].ToString();
-                                EstadoDTO estado = new EstadoDTO();
-                                estado.ID = Convert.ToInt32(reader[2]);
-                                estado.Nombre = reader[3].ToString();
-                                estrategia.Estado = estado;
-                                AplicacionDTO aplicacion = new AplicacionDTO();
-                                aplicacion.Aplicacion_ID = Convert.ToInt32(reader[4]);
-                                aplicacion.Version = reader[5].ToString();
-                                aplicacion.Descripcion = reader[6].ToString();
-                                aplicacion.Es_Web = Convert.ToInt32(reader[7]) == 1 ? true : false;
-                                aplicacion.Nombre = reader[8].ToString();
-                                aplicacion.Ruta_Aplicacion = reader[9].ToString();
-                                estrategia.Aplicacion = aplicacion;
-                                listEstrategias.Add(estrategia);
+                                
+                                
+                                if(!listEstrategias.Exists(e=>e.Estrategia_ID == Convert.ToInt32(reader[0])))
+                                {
+                                    EstrategiaDTO estrategia = new EstrategiaDTO();
+                                    
+                                    estrategia.Estrategia_ID = Convert.ToInt32(reader[0]);
+                                    estrategia.Nombre = reader[1].ToString();
+                                    EstadoDTO estado = new EstadoDTO();
+                                    estado.ID = Convert.ToInt32(reader[2]);
+                                    estado.Nombre = reader[3].ToString();
+                                    estrategia.Estado = estado;
+                                    AplicacionDTO aplicacion = new AplicacionDTO();
+                                    aplicacion.Aplicacion_ID = Convert.ToInt32(reader[4]);
+                                    aplicacion.Version = reader[5].ToString();
+                                    aplicacion.Descripcion = reader[6].ToString();
+                                    aplicacion.Es_Web = Convert.ToInt32(reader[7]) == 1 ? true : false;
+                                    aplicacion.Nombre = reader[8].ToString();
+                                    aplicacion.Ruta_Aplicacion = reader[9].ToString();
+                                    estrategia.Aplicacion = aplicacion;
+                                    listEstrategias.Add(estrategia);
+                                }
+
+                                TipoPruebaDTO tipoPrueba = new TipoPruebaDTO()
+                                {
+                                    ID = Convert.ToInt32(reader[10]),
+                                    Nombre = reader[11].ToString(),
+                                };
+
+                                MQTipoPruebaDTO mqTipo = new MQTipoPruebaDTO();
+                                mqTipo.ID= Convert.ToInt32(reader[12]);
+                                tipoPrueba.MQTipoPrueba = mqTipo;
+
+                                listEstrategias.Find(e => e.Estrategia_ID == Convert.ToInt32(reader[0])).TipoPruebas.Add(tipoPrueba);
                             }
-                            
                         }
                         
                     }

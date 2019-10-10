@@ -24,7 +24,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         }
 
         // GET: api/Estrategia/5
-        [HttpGet("{id}", Name = "Get")]
+        [HttpGet("{id}", Name = "GetEstrategia")]
         public List<EstrategiaDTO> Get(int id)
         {
             Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
