@@ -39,6 +39,13 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
             return estrategiaController.CreateEstrategia(estrategia);
         }
 
+        [HttpPost("{id}", Name = "PostPrueba")]
+        public ReturnMessage PostPrueba([FromBody]EstrategiaDTO estrategia)
+        {
+            Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
+            return estrategiaController.AddTipoPrueba(estrategia);
+        }
+
         // PUT: api/Estrategia/5
         [HttpPut("{id}")]
         public ReturnMessage Put([FromBody] EstrategiaDTO estrategia)

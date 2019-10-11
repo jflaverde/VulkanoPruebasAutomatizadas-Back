@@ -78,5 +78,22 @@ namespace Controller
                 return message;
             }
         }
+
+        public ReturnMessage AddTipoPrueba(EstrategiaDTO estrategia)
+        {
+            try
+            {
+                //logica de negocio aquí
+                EstrategiaBehavior estrategiaBehavior = new EstrategiaBehavior();
+                return estrategiaBehavior.AddTipoPrueba(estrategia);
+            }
+            catch (Exception ex)
+            {
+                ReturnMessage message = new ReturnMessage();
+                message.TipoMensaje = TipoMensaje.Error;
+                message.Mensaje = ex.Message;
+                return message;
+            }
+        }
     }
 }

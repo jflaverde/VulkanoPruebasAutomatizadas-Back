@@ -4,6 +4,7 @@ using System.Text;
 using Data.DTO;
 using System.Data.SqlClient;
 using Data.Messages;
+using System.Linq;
 
 namespace Data.CRUD
 {
@@ -18,7 +19,9 @@ namespace Data.CRUD
         {
             ReturnMessage mensaje = new ReturnMessage();
             string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-                            INSERT INTO ESTRATEGIA (NOMBRE,ESTADO_ID,APLICACION_ID) VALUES (@NOMBRE,@ESTADO,@APLICACION)";
+                            INSERT INTO ESTRATEGIA (NOMBRE,ESTADO_ID,APLICACION_ID) VALUES (@NOMBRE,@ESTADO,@APLICACION)
+
+                            SELECT @@IDENTITY AS 'Identity';";
 
             using (var con = ConectarDB())
             {
@@ -31,7 +34,13 @@ namespace Data.CRUD
                         command.Parameters.Add(new SqlParameter("@NOMBRE", estrategia.Nombre));
                         command.Parameters.Add(new SqlParameter("@ESTADO", estrategia.Estado.ID));
                         command.Parameters.Add(new SqlParameter("@APLICACION", estrategia.Aplicacion.Aplicacion_ID));
-                        command.ExecuteNonQuery();
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                estrategia.Estrategia_ID = Convert.ToInt32(reader[0]);
+                            }
+                        }
                     }
 
                     mensaje.Mensaje="La estrategia se creó correctamente";
@@ -215,17 +224,22 @@ namespace Data.CRUD
                                     listEstrategias.Add(estrategia);
                                 }
 
-                                TipoPruebaDTO tipoPrueba = new TipoPruebaDTO()
+                                if(!string.IsNullOrEmpty(reader[10].ToString()))
                                 {
-                                    ID = Convert.ToInt32(reader[10]),
-                                    Nombre = reader[11].ToString(),
-                                };
+                                    TipoPruebaDTO tipoPrueba = new TipoPruebaDTO()
+                                    {
+                                        ID = Convert.ToInt32(reader[10]),
+                                        Nombre = reader[11].ToString(),
+                                    };
 
-                                MQTipoPruebaDTO mqTipo = new MQTipoPruebaDTO();
-                                mqTipo.ID= Convert.ToInt32(reader[12]);
-                                tipoPrueba.MQTipoPrueba = mqTipo;
-
-                                listEstrategias.Find(e => e.Estrategia_ID == Convert.ToInt32(reader[0])).TipoPruebas.Add(tipoPrueba);
+                                    MQTipoPruebaDTO mqTipo = new MQTipoPruebaDTO();
+                                    if(!string.IsNullOrEmpty(reader[12].ToString()))
+                                    {
+                                        mqTipo.ID = Convert.ToInt32(reader[12]);
+                                        tipoPrueba.MQTipoPrueba = mqTipo;
+                                    }
+                                    listEstrategias.Find(e => e.Estrategia_ID == Convert.ToInt32(reader[0])).TipoPruebas.Add(tipoPrueba);
+                                }
                             }
                         }
                         
@@ -274,6 +288,195 @@ namespace Data.CRUD
                 {
                     mensaje.Mensaje = ex.Message;
                     mensaje.TipoMensaje = TipoMensaje.Error;
+                }
+                finally
+                {
+                    con.Close();
+                }
+                return mensaje;
+            }
+        }
+
+
+        /// <summary>
+        /// Inserta un tipo de prueba
+        /// </summary>
+        /// <param name="estrategia"></param>
+        /// <returns></returns>
+        public ReturnMessage AddTipoPrueba(EstrategiaDTO estrategia)
+        {
+            ReturnMessage mensaje = new ReturnMessage();
+            var mensajeScript = AddScript(estrategia.TipoPruebas.First());
+            if(mensajeScript.TipoMensaje==TipoMensaje.Correcto)
+            {
+                string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+                                INSERT INTO [dbo].[TIPOPRUEBA]
+                                       ([NOMBRE]
+                                       ,[PARAMETROS]
+                                       ,[SCRIPT_ID]
+                                       ,[MQTIPOPRUEBA_ID])
+                                 VALUES(
+                                       @Nombre,
+                                       @Parametros,
+                                       @Script,
+                                       @MQTipoPrueba)
+
+                                SELECT @@IDENTITY AS 'Identity';";
+
+                using (var con = ConectarDB())
+                {
+                    con.Open();
+
+                    try
+                    {
+                        using (SqlCommand command = new SqlCommand(query, con))
+                        {
+                            var tipoPrueba = estrategia.TipoPruebas.First();
+                            command.Parameters.Add(new SqlParameter("@Nombre", tipoPrueba.Nombre));
+                            command.Parameters.Add(new SqlParameter("@Parametros", tipoPrueba.Parametros));
+                            command.Parameters.Add(new SqlParameter("@MQTipoPrueba", tipoPrueba.MQTipoPrueba.ID));
+                            command.Parameters.Add(new SqlParameter("@Script", ((ScriptDTO)mensajeScript.obj).ID));
+                            using (var reader = command.ExecuteReader())
+                            {
+                                while (reader.Read())
+                                {
+                                    estrategia.TipoPruebas.First().ID = Convert.ToInt32(reader[0]);
+                                }
+                            }
+                        }
+
+                        mensaje.Mensaje = "La prueba se creó correctamente";
+                        mensaje.TipoMensaje = TipoMensaje.Correcto;
+                        mensaje.obj = estrategia.TipoPruebas.First();
+
+                        AsociarPruebaEstrategia(estrategia.Estrategia_ID, estrategia.TipoPruebas.First().ID);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Count not insert.");
+                        mensaje.Mensaje = ex.Message;
+                        mensaje.TipoMensaje = TipoMensaje.Error;
+                        mensaje.obj = estrategia.TipoPruebas.First();
+                    }
+                    finally
+                    {
+                        con.Close();
+                    }
+                }
+                return mensaje;
+            }
+            return mensajeScript;
+        }
+
+
+        /// <summary>
+        /// Asocia el tipo de prueba y la estrategia.
+        /// </summary>
+        /// <param name="tipoPrueba_id"></param>
+        /// <param name="estrategia_id"></param>
+        /// <returns></returns>
+        private ReturnMessage AsociarPruebaEstrategia(int tipoPrueba_id, int estrategia_id)
+        {
+            ReturnMessage mensaje = new ReturnMessage();
+
+            string query = @"INSERT INTO [dbo].[ESTRATEGIA_TIPOPRUEBA]
+                               ([ESTRATEGIA_ID]
+                               ,[TIPOPRUEBA_ID])
+                             VALUES
+                                   @Estrategia_ID,
+                                   @TipoPrueba_ID)
+
+                           SELECT @@IDENTITY AS 'Identity'; ";
+
+            int identity = 0;
+            using (var con = ConectarDB())
+            {
+                con.Open();
+
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, con))
+                    {
+                        command.Parameters.Add(new SqlParameter("@TipoPrueba_ID", tipoPrueba_id));
+                        command.Parameters.Add(new SqlParameter("@Estrategia_ID", estrategia_id));
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                identity = Convert.ToInt32(reader[0]);
+                            }
+                        }
+                    }
+
+                    mensaje.Mensaje = "La prueba-estrategia se asociaron correctamente";
+                    mensaje.TipoMensaje = TipoMensaje.Correcto;
+                    mensaje.obj = estrategia_id;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Count not insert.");
+                    mensaje.Mensaje = ex.Message;
+                    mensaje.TipoMensaje = TipoMensaje.Error;
+                    mensaje.obj = estrategia_id;
+                }
+                finally
+                {
+                    con.Close();
+                }
+
+                return mensaje;
+            }
+        }
+
+        /// <summary>
+        /// Inserta el script a partir de una prueba
+        /// </summary>
+        /// <param name="tipoPrueba"></param>
+        /// <returns></returns>
+        private ReturnMessage AddScript(TipoPruebaDTO tipoPrueba)
+        {
+            ReturnMessage mensaje = new ReturnMessage();
+            string query = @"INSERT INTO [dbo].[SCRIPT]
+                                   ([NOMBRE]
+                                   ,[SCRIPT]
+                                   ,[EXTENSION])
+                             VALUES
+                                   (@Nombre
+                                   ,@Script
+                                   ,@Extension)
+
+                            SELECT @@IDENTITY AS 'Identity'";
+
+            using (var con = ConectarDB())
+            {
+                con.Open();
+
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, con))
+                    {
+                        command.Parameters.Add(new SqlParameter("@Nombre", tipoPrueba.Script.Nombre));
+                        command.Parameters.Add(new SqlParameter("@Script", tipoPrueba.Script.Script));
+                        command.Parameters.Add(new SqlParameter("@Extension", tipoPrueba.Script.Extension));
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                tipoPrueba.Script.ID = Convert.ToInt32(reader[0]);
+                            }
+                        }
+                    }
+
+                    mensaje.Mensaje = "El Script se creó correctamente";
+                    mensaje.TipoMensaje = TipoMensaje.Correcto;
+                    mensaje.obj = tipoPrueba.Script;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Count not insert.");
+                    mensaje.Mensaje = ex.Message;
+                    mensaje.TipoMensaje = TipoMensaje.Error;
+                    mensaje.obj = tipoPrueba.Script;
                 }
                 finally
                 {
