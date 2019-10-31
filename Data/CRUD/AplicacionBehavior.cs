@@ -205,6 +205,7 @@ namespace Data.CRUD
             }
         }
         
+
         public List<AplicacionDTO> SelectAplicacion(int aplicacion_id)
         {
             List<AplicacionDTO> listaAplicaciones = new List<AplicacionDTO>();
