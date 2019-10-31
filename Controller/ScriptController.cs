@@ -20,7 +20,6 @@ namespace Controller
             catch (Exception ex)
             {
                 ReturnMessage mensaje = new ReturnMessage();
-
                 mensaje.TipoMensaje = TipoMensaje.Error;
                 mensaje.Mensaje = ex.Message;
                 return mensaje;
