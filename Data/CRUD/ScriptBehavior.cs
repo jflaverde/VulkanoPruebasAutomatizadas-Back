@@ -151,5 +151,60 @@ namespace Data.CRUD
             }
             return mensaje;
         }
+
+
+        /// <summary>
+        /// Selecciona un script dado un tipo de prueba.
+        /// </summary>
+        /// <param name="tipoPrueba_id"></param>
+        /// <returns></returns>
+        public ScriptDTO SelectScript(int tipoPrueba_id)
+        {
+            StringBuilder query = new StringBuilder().Append(@"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+                            SELECT 
+								SCRIPT.SCRIPT_ID,
+								SCRIPT.NOMBRE,
+								SCRIPT.SCRIPT,
+								SCRIPT.EXTENSION 
+							FROM SCRIPT INNER JOIN TIPOPRUEBA ON SCRIPT.SCRIPT_ID=TIPOPRUEBA.SCRIPT_ID
+							AND TIPOPRUEBA.TIPOPRUEBA_ID=@tipoPrueba_id");
+
+            using (var con = ConectarDB())
+            {
+                con.Open();
+
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query.ToString(), con))
+                    {
+                        command.Parameters.Add(new SqlParameter("@tipoPrueba_id", tipoPrueba_id));
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                ScriptDTO script = new ScriptDTO()
+                                {
+                                    ID = Convert.ToInt32(reader[0]),
+                                    Nombre = reader[1].ToString(),
+                                    Script = reader[2].ToString(),
+                                    Extension = reader[3].ToString()
+                                };
+                                return script;
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Count not insert.");
+                }
+                finally
+                {
+                    con.Close();
+                }
+            }
+            return new ScriptDTO();
+        }
     }
 }

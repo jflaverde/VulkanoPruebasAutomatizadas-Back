@@ -28,6 +28,26 @@ namespace Controller
         }
 
         /// <summary>
+        /// Selecciona un script dado un tipo de prueba
+        /// </summary>
+        /// <param name="tipoPrueba_id"></param>
+        /// <returns></returns>
+        public ScriptDTO SelectScript(int tipoPrueba_id)
+        {
+            try
+            {
+                //logica de negocio aquí
+                ScriptBehavior scriptBehavior = new ScriptBehavior();
+                return scriptBehavior.SelectScript(tipoPrueba_id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+
+        /// <summary>
         /// Actualiza script
         /// </summary>
         /// <param name="script"></param>
