@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Controller;
+using Data.DTO;
+using Data.Messages;
 
 namespace VulkanoPruebasAutomatizadas_Back.Controllers
 {
@@ -14,15 +16,17 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
     {
         // GET: api/Aplicacion
         [HttpGet]
-        public List<AplicacionDTO> GetApplication()
+        public List<AplicacionDTO> GetAplicacion()
         {
             Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
             return aplicacionController.SelectAplicacion(0);
         }
 
         // GET: api/Aplicacion/5
-        [HttpGet("{id}", Name = "GetApplication")]
-        public List<AplicacionDTO> GetApplication(int id)
+
+        [HttpGet("{id}", Name = "GetAplicacion")]
+        public List<AplicacionDTO> Get(int id)
+
         {
             Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
             return aplicacionController.SelectAplicacion(id);
@@ -30,21 +34,29 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
 
         // POST: api/Aplicacion
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
 
+        public ReturnMessage Post([FromBody] AplicacionDTO aplicacion)
+        {
+            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            return aplicacionController.CreateAplicacion(aplicacion);
         }
 
         // PUT: api/Aplicacion/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+       [HttpPut("{id}")]
+        public ReturnMessage Put([FromBody] AplicacionDTO aplicacion)
         {
+            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            return aplicacionController.UpdateAplicacion(aplicacion);
         }
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+
+        public ReturnMessage Delete(int aplicacion_id)
         {
+            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            return aplicacionController.DeleteAplicacion(aplicacion_id);
+
         }
     }
 }
