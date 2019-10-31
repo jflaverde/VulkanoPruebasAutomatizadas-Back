@@ -41,26 +41,6 @@ namespace Controller
             }
             catch (Exception ex)
             {
-                throw ex;
-            }
-        }
-
-
-        /// <summary>
-        /// Actualiza script
-        /// </summary>
-        /// <param name="script"></param>
-        /// <returns></returns>
-        public ReturnMessage UpdateScript(ScriptDTO script)
-        {
-            try
-            {
-                //logica de negocio aquí
-                ScriptBehavior scriptBehavior = new ScriptBehavior();
-                return scriptBehavior.UpdateScript(script);
-            }
-            catch (Exception ex)
-            {
                 ReturnMessage mensaje = new ReturnMessage();
 
                 mensaje.TipoMensaje = TipoMensaje.Error;

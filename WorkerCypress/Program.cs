@@ -25,6 +25,7 @@ namespace WorkerCypress
 
 
         static void TestCypress(EstrategiaDTO estrategia)
+
         {
             var psiNpmRunDist = new ProcessStartInfo
             {
@@ -34,6 +35,7 @@ namespace WorkerCypress
             };
             var pNpmRunDist = Process.Start(psiNpmRunDist);
             pNpmRunDist.StandardInput.WriteLine("cd C:\\Windows\\System32\\cmd.exe");
+
 
             //Traer y copiar el archivo script al sitio donde están los scripts 
             string rutaAbsoluta = "C:\\Users\\Sistemas\\source\\repos\\VulkanoPruebasAutomatizadas-Front\\VulkanoPruebasAutomatizadas-Front\\wwwroot";
