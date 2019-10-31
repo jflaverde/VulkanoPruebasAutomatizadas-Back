@@ -51,7 +51,7 @@ namespace Data.CRUD
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine("Count not insert.");
+                    Console.WriteLine("No se pudo insertar.");
                     mensaje.Mensaje = ex.Message;
                     mensaje.TipoMensaje = TipoMensaje.Error;
                     mensaje.obj = estrategia;

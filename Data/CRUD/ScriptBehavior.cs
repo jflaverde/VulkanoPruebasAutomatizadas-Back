@@ -152,7 +152,6 @@ namespace Data.CRUD
             return mensaje;
         }
 
-
         /// <summary>
         /// Selecciona un script dado un tipo de prueba.
         /// </summary>

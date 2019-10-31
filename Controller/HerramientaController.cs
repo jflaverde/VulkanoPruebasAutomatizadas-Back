@@ -7,20 +7,20 @@ using System.Text;
 
 namespace Controller
 {
-    public class AplicacionController
+    public class HerramientaController
     {
         /// <summary>
         /// Crea una estrategia
         /// </summary>
-        /// <param name="aplicacion"></param>
+        /// <param name="herramienta"></param>
         /// <returns></returns>
-        public ReturnMessage CreateAplicacion(AplicacionDTO aplicacion)
+        public ReturnMessage CreateHerramienta(HerramientaDTO herramienta)
         {
             try
             {
                 //logica de negocio aquí
-                AplicacionBehavior aplicacionBehavior = new AplicacionBehavior();
-                return aplicacionBehavior.CreateAplicacion(aplicacion);
+                HerramientaBehavior herramientaBehavior = new HerramientaBehavior();
+                return herramientaBehavior.CreateHerramienta(herramienta);
             }
             catch (Exception ex)
             {
@@ -31,13 +31,13 @@ namespace Controller
             }
         }
 
-        public ReturnMessage UpdateAplicacion(AplicacionDTO aplicacion)
+        public ReturnMessage UpdateHerramienta(HerramientaDTO herramienta)
         {
             try
             {
                 //logica de negocio aquí
-                AplicacionBehavior aplicacionBehavior = new AplicacionBehavior();
-                return aplicacionBehavior.UpdateAplicacion(aplicacion);
+                HerramientaBehavior herramientaBehavior = new HerramientaBehavior();
+                return herramientaBehavior.UpdateHerramienta(herramienta);
             }
             catch (Exception ex)
             {
@@ -48,13 +48,13 @@ namespace Controller
             }
         }
 
-        public ReturnMessage DeleteAplicacion(int aplicacion_id)
+        public ReturnMessage DeleteHerramienta(int herramienta_id)
         {
             try
             {
                 //logica de negocio aquí
-                AplicacionBehavior aplicacionBehavior = new AplicacionBehavior();
-                return aplicacionBehavior.DeleteAplicacion(aplicacion_id);
+                HerramientaBehavior herramientaBehavior = new HerramientaBehavior();
+                return herramientaBehavior.DeleteHerramienta(herramienta_id);
             }
             catch (Exception ex)
             {
@@ -62,6 +62,20 @@ namespace Controller
                 message.TipoMensaje = TipoMensaje.Error;
                 message.Mensaje = ex.Message;
                 return message;
+            }
+        }
+
+        public List<HerramientaDTO> SelectHerramienta(int herramienta_id)
+        {
+            try
+            {
+                //logica de negocio aquí
+                HerramientaBehavior herramientaBehavior = new HerramientaBehavior();
+                return herramientaBehavior.SelectHerramienta(herramienta_id);
+            }
+            catch (Exception ex)
+            {
+                return new List<HerramientaDTO>();
             }
         }
     }
