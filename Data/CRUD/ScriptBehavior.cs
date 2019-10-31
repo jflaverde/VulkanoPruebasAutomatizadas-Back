@@ -172,7 +172,6 @@ namespace Data.CRUD
             using (var con = ConectarDB())
             {
                 con.Open();
-
                 try
                 {
                     using (SqlCommand command = new SqlCommand(query.ToString(), con))
