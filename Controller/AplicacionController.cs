@@ -64,5 +64,26 @@ namespace Controller
                 return message;
             }
         }
+
+        public ReturnMessage SelectAplicacion(int aplicacion_id)
+        {
+            ReturnMessage message = new ReturnMessage();
+            try
+            {
+                //logica de negocio aquí
+                AplicacionBehavior aplicacionBehavior = new AplicacionBehavior();
+                message.obj= aplicacionBehavior.SelectAplicacion(aplicacion_id);
+                message.TipoMensaje = TipoMensaje.Correcto;
+                return message;
+            }
+            catch (Exception ex)
+            {
+                
+                message.TipoMensaje = TipoMensaje.Error;
+                message.Mensaje = ex.Message;
+                return message;
+            }
+        }
+
     }
 }
