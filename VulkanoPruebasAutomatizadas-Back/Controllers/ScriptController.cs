@@ -35,13 +35,13 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
             return scriptController.AddScript(script);
         }
 
-        // PUT: api/Script/5
-        [HttpPut(Name = "updateScript")]
-        public ReturnMessage Put([FromBody] ScriptDTO script)
-        {
-            Controller.ScriptController scriptController = new Controller.ScriptController();
-            return scriptController.UpdateScript(script);
-        }
+        //// PUT: api/Script/5
+        //[HttpPut(Name = "updateScript")]
+        //public ReturnMessage Put([FromBody] ScriptDTO script)
+        //{
+        //    Controller.ScriptController scriptController = new Controller.ScriptController();
+        //    return scriptController.UpdateScript(script);
+        //}
 
         // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
