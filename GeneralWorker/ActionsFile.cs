@@ -1,19 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using System.Text;
 
 namespace GeneralWorker
 {
-    class ActionsFile
+    public class ActionsFile
     {
         /// <summary>
-        /// Extract to a directoru the content of the file zip specified
+        /// Extract to a directory the content of the file zip specified
         /// </summary>
         /// <param name="scriptPath">Full path of the file to extract. The extension must be .zip</param>
         /// <param name="destinationPath">Path in which content will be extracted</param>
-        private void UnZipFile(string scriptPath, string destinationPath)
+        public void UnzipFile(string scriptPath, string destinationPath)
         {
             try
             {
