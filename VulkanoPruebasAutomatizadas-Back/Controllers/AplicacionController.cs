@@ -16,7 +16,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
     {
         // GET: api/Aplicacion
         [HttpGet]
-        public List<AplicacionDTO> GetAplicacion()
+        public ReturnMessage GetAplicacion()
         {
             Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
             return aplicacionController.SelectAplicacion(0);
@@ -25,8 +25,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         // GET: api/Aplicacion/5
 
         [HttpGet("{id}", Name = "GetAplicacion")]
-        public List<AplicacionDTO> Get(int id)
-
+        public ReturnMessage Get(int id)
         {
             Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
             return aplicacionController.SelectAplicacion(id);
@@ -34,7 +33,6 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
 
         // POST: api/Aplicacion
         [HttpPost]
-
         public ReturnMessage Post([FromBody] AplicacionDTO aplicacion)
         {
             Controller.AplicacionController aplicacionController = new Controller.AplicacionController();

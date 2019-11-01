@@ -64,18 +64,25 @@ namespace Controller
                 return message;
             }
         }
-        
-        public List<AplicacionDTO> SelectAplicacion(int aplicacion_id)
+
+      
+        public ReturnMessage SelectAplicacion(int aplicacion_id)
         {
+            ReturnMessage message = new ReturnMessage();
             try
             {
                 //logica de negocio aquí
                 AplicacionBehavior aplicacionBehavior = new AplicacionBehavior();
-                return aplicacionBehavior.SelectAplicacion(aplicacion_id);
+
+                message.obj= aplicacionBehavior.SelectAplicacion(aplicacion_id);
+                message.TipoMensaje = TipoMensaje.Correcto;
+                return message;
             }
             catch (Exception ex)
             {
-                return new List<AplicacionDTO>();
+                message.TipoMensaje = TipoMensaje.Error;
+                message.Mensaje = ex.Message;
+                return message;
             }
         }
     }

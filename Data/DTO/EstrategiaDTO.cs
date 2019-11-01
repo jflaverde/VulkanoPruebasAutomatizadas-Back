@@ -11,6 +11,10 @@ namespace Data.DTO
         public EstadoDTO Estado { get; set; }
         public AplicacionDTO Aplicacion { get; set; }
         public List<TipoPruebaDTO> TipoPruebas { get; set; }
+        public string Version { get; set; }
+        public bool EsWeb { get; set; }
+        public string URLAplicacion { get; set; }
+        public string RutaAPK { get; set; }
 
         public EstrategiaDTO()
         {

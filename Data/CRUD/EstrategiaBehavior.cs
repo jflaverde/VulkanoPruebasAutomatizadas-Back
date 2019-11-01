@@ -19,7 +19,8 @@ namespace Data.CRUD
         {
             ReturnMessage mensaje = new ReturnMessage();
             string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-                            INSERT INTO ESTRATEGIA (NOMBRE,ESTADO_ID,APLICACION_ID) VALUES (@NOMBRE,@ESTADO,@APLICACION)
+                            INSERT INTO ESTRATEGIA (NOMBRE,ESTADO_ID,APLICACION_ID,VERSION,ES_WEB,URL_APLICACION,RUTA_APK) 
+                            VALUES (@NOMBRE,@ESTADO,@APLICACION,@VERSION,@ES_WEB,@URL_APLICACION,@RUTA_APK)
 
                             SELECT @@IDENTITY AS 'Identity';";
 
@@ -34,6 +35,10 @@ namespace Data.CRUD
                         command.Parameters.Add(new SqlParameter("@NOMBRE", estrategia.Nombre));
                         command.Parameters.Add(new SqlParameter("@ESTADO", estrategia.Estado.ID));
                         command.Parameters.Add(new SqlParameter("@APLICACION", estrategia.Aplicacion.Aplicacion_ID));
+                        command.Parameters.Add(new SqlParameter("@VERSION", estrategia.Version));
+                        command.Parameters.Add(new SqlParameter("@ES_WEB", estrategia.EsWeb?1:0));
+                        command.Parameters.Add(new SqlParameter("@URL_APLICACION", string.IsNullOrEmpty(estrategia.URLAplicacion)?string.Empty:estrategia.URLAplicacion));
+                        command.Parameters.Add(new SqlParameter("@RUTA_APK", string.IsNullOrEmpty(estrategia.RutaAPK)?string.Empty:estrategia.RutaAPK));
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -174,7 +179,11 @@ namespace Data.CRUD
                             T1.RUTA_APLICACION,
 							T3.TIPOPRUEBA_ID,
 							T4.NOMBRE,
-							T4.MQTIPOPRUEBA_ID
+							T4.MQTIPOPRUEBA_ID,
+							T0.RUTA_APK,
+							T0.URL_APLICACION,
+							T0.version,
+							T0.ES_WEB
                             FROM ESTRATEGIA T0 
                             INNER JOIN APLICACION T1 ON T0.APLICACION_ID=T1.APLICACION_ID
                             INNER JOIN ESTADO T2 ON T0.ESTADO_ID=T2.ESTADO_ID
@@ -213,6 +222,10 @@ namespace Data.CRUD
                                     estado.ID = Convert.ToInt32(reader[2]);
                                     estado.Nombre = reader[3].ToString();
                                     estrategia.Estado = estado;
+                                    estrategia.RutaAPK = reader[13].ToString();
+                                    estrategia.URLAplicacion = reader[14].ToString();
+                                    estrategia.Version = reader[15].ToString();
+                                    estrategia.EsWeb= Convert.ToInt32(reader[7]) == 1 ? true : false;
                                     AplicacionDTO aplicacion = new AplicacionDTO();
                                     aplicacion.Aplicacion_ID = Convert.ToInt32(reader[4]);
                                     aplicacion.Version = reader[5].ToString();
@@ -336,7 +349,7 @@ namespace Data.CRUD
                         {
                             var tipoPrueba = estrategia.TipoPruebas.First();
                             command.Parameters.Add(new SqlParameter("@Nombre", tipoPrueba.Nombre));
-                            command.Parameters.Add(new SqlParameter("@Parametros", tipoPrueba.Parametros));
+                            command.Parameters.Add(new SqlParameter("@Parametros", string.IsNullOrEmpty(tipoPrueba.Parametros)?string.Empty:tipoPrueba.Parametros));
                             command.Parameters.Add(new SqlParameter("@MQTipoPrueba", tipoPrueba.MQTipoPrueba.ID));
                             command.Parameters.Add(new SqlParameter("@Script", script_id));
                             using (var reader = command.ExecuteReader())
