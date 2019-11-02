@@ -7,7 +7,7 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Linq;
 
-namespace WorkerCypress
+namespace GeneralWorker
 {
     public class RabbitMQ
     {

@@ -17,7 +17,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Monitor", "Monitor\Monitor.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeneralWorker", "GeneralWorker\GeneralWorker.csproj", "{0BCB791D-7DB9-4A37-A75D-B19B1D1D4348}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerVRT", "WorkerVRT\WorkerVRT.csproj", "{FFCA33D0-83A8-4D4F-8472-E720A9FA9A78}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerVRT", "WorkerVRT\WorkerVRT.csproj", "{FFCA33D0-83A8-4D4F-8472-E720A9FA9A78}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerWebsiteBDT", "WorkerWebsiteBDT\WorkerWebsiteBDT.csproj", "{AE9D559F-97D3-4F6A-9449-6260EC3AEA2B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{FFCA33D0-83A8-4D4F-8472-E720A9FA9A78}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFCA33D0-83A8-4D4F-8472-E720A9FA9A78}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFCA33D0-83A8-4D4F-8472-E720A9FA9A78}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE9D559F-97D3-4F6A-9449-6260EC3AEA2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE9D559F-97D3-4F6A-9449-6260EC3AEA2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE9D559F-97D3-4F6A-9449-6260EC3AEA2B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE9D559F-97D3-4F6A-9449-6260EC3AEA2B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

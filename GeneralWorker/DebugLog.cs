@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 
-namespace WorkerCypress
+namespace GeneralWorker
 {
     /// <summary>
     /// Formatea y captura los eventos en un archivo de texto
@@ -42,7 +42,7 @@ namespace WorkerCypress
             try
             {
                 fileName = FileName();
-                using (StreamWriter w = File.AppendText(fileName))
+                using (StreamWriter w = System.IO.File.AppendText(fileName))
                 {
                     w.WriteLine(DateTime.Now.ToString() + " - " + logText);
                 }
@@ -58,7 +58,7 @@ namespace WorkerCypress
         {
             try
             {
-                using (StreamWriter w = File.AppendText(fileName))
+                using (StreamWriter w = System.IO.File.AppendText(fileName))
                 {
                     w.WriteLine("--------------------------------------------------------------------------------");
                     w.WriteLine(DateTime.Now.ToString() + " - EXCEPCION");
