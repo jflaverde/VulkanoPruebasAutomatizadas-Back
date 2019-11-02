@@ -13,5 +13,8 @@ namespace Data.DTO
         public string Descripcion { get; set; }
         public EstadoDTO Estado { get; set; }
         public MQTipoPruebaDTO MQTipoPrueba { get; set; }
+        public List<HistorialEjecucionPruebaDTO> HistorialEjecuciones { get; set; }
+        public TipoPruebaDTO() {
+        }
     }
 }
