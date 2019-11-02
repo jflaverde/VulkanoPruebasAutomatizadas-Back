@@ -42,10 +42,10 @@ namespace WorkerWebsiteE2E
                 pNpmRunDist.StandardInput.WriteLine("cd C:\\Windows\\System32\\cmd.exe");
 
                 //Traer y copiar el archivo script al sitio donde están los scripts 
-                //string rutaAbsoluta = "C:\\Users\\Sistemas\\source\\repos\\VulkanoPruebasAutomatizadas-Front\\VulkanoPruebasAutomatizadas-Front\\wwwroot";
-                string rutaAbsoluta = "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-Front\\VulkanoPruebasAutomatizadas-Front\\wwwroot\\uploads";
-                Directory.SetCurrentDirectory(@"D:\vulkanotest");
-                string cypath = Path.GetFullPath(@"D:");
+                string rutaAbsoluta = "C:\\Users\\Sistemas\\source\\repos\\VulkanoPruebasAutomatizadas-Front\\VulkanoPruebasAutomatizadas-Front\\wwwroot";
+                //string rutaAbsoluta = "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-Front\\VulkanoPruebasAutomatizadas-Front\\wwwroot\\uploads";
+                Directory.SetCurrentDirectory(@"C:\vulkanotest");
+                string cypath = Path.GetFullPath(@"C:");
                 string rutaScript = string.Concat(rutaAbsoluta, estrategia.TipoPruebas.First().Script.Script);
                 string rutaDestino = string.Concat(cypath, "\\", estrategia.TipoPruebas.First().Script.ID);
 
