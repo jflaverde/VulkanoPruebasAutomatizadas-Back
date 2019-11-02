@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controller", "Controller\Controller.csproj", "{00426C91-21A7-47F1-8D08-36B8F58019B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerCypress", "WorkerCypress\WorkerCypress.csproj", "{EFCE630F-AB2E-433F-A107-213A6E3B88F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerWebsiteE2E", "WorkerWebsiteE2E\WorkerWebsiteE2E.csproj", "{EFCE630F-AB2E-433F-A107-213A6E3B88F0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerAndroid", "WorkerAndroid\WorkerAndroid.csproj", "{4DD6A78D-8431-4EC9-A815-B23B232512E3}"
 EndProject
