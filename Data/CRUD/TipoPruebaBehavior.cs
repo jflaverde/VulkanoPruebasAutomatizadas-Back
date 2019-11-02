@@ -82,17 +82,19 @@ namespace Data.CRUD
 
                                 if (!string.IsNullOrEmpty(reader[6].ToString()))
                                 {
-                                    HistorialEjecucionPruebaDTO historial = new HistorialEjecucionPruebaDTO()
-                                    {
-                                        FechaEjecucion = Convert.ToDateTime(reader[7]),
-                                        FechaFinalizacion = Convert.ToDateTime(reader[8]),
-                                        HoraEjecucion = Convert.ToInt32(reader[9]),
-                                        HoraFinalizacion = Convert.ToInt32(reader[10]),
-                                        Estado = Convert.ToInt32(reader[11]),
-                                        RutaResultados = reader[12].ToString()
-                                    };
+                                    HistorialEjecucionPruebaDTO historial = new HistorialEjecucionPruebaDTO();
 
-                                    listaPruebas.Find(e => e.ID == Convert.ToInt32(reader[0])).HistorialEjecuciones.Add(historial);
+                                    historial.FechaEjecucion = Convert.ToDateTime(reader[7]);
+                                    historial.HoraEjecucion = !DBNull.Value.Equals(reader[9]) ? Convert.ToInt32(reader[9]) : 0;
+                                    historial.HoraFinalizacion = !DBNull.Value.Equals(reader[10])? Convert.ToInt32(reader[10]):0;
+                                    historial.Estado = Convert.ToInt32(reader[11]);
+                                    historial.RutaResultados = !DBNull.Value.Equals(reader[12].ToString()) ? reader[12].ToString() : string.Empty;
+                                   
+                                    if (!DBNull.Value.Equals(reader[8]))
+                                        historial.FechaFinalizacion = Convert.ToDateTime(reader[8]);
+
+
+                                listaPruebas.Find(e => e.ID == Convert.ToInt32(reader[0])).HistorialEjecuciones.Add(historial);
                                 }
                             }
                         }
@@ -119,7 +121,6 @@ namespace Data.CRUD
             
         }
 
-     
         /// <summary>
         /// inserta el resultado de la prueba
         /// </summary>

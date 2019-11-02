@@ -15,6 +15,10 @@ namespace Data.DTO
         public MQTipoPruebaDTO MQTipoPrueba { get; set; }
         public List<HistorialEjecucionPruebaDTO> HistorialEjecuciones { get; set; }
         public TipoPruebaDTO() {
+            HistorialEjecuciones = new List<HistorialEjecucionPruebaDTO>();
+            MQTipoPrueba = new MQTipoPruebaDTO();
+            Estado = new EstadoDTO();
+            Script = new ScriptDTO();
         }
     }
 }

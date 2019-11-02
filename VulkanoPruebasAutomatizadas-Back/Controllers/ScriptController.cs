@@ -13,19 +13,6 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
     [ApiController]
     public class ScriptController : ControllerBase
     {
-        // GET: api/Script
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Script/5
-        [HttpGet("{id}", Name = "Get")]
-        public string Get(int id)
-        {
-            return "value";
-        }
 
         // POST: api/Script
         [HttpPost]
