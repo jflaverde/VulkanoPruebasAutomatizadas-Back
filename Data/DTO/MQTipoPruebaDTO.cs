@@ -10,5 +10,7 @@ namespace Data.DTO
         public string Nombre { get; set; }
         public string RouteKey { get; set; }
         public string QueueName { get; set; }
+
+        public int Es_Web { get; set; }
     }
 }

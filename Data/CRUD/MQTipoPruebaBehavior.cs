@@ -12,7 +12,7 @@ namespace Data.CRUD
         {
             List<MQTipoPruebaDTO> listaMQTipoPruebas = new List<MQTipoPruebaDTO>();
             StringBuilder query = new StringBuilder().Append(@"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-                        SELECT MQTIPOPRUEBA_ID,NOMBRE,ROUTEKEY,QUEUENAME FROM MQTIPOPRUEBA");
+                        SELECT MQTIPOPRUEBA_ID,NOMBRE,ROUTEKEY,QUEUENAME,ES_WEB FROM MQTIPOPRUEBA");
 
             if(tipoPruebaID!=0)
             {
@@ -38,6 +38,7 @@ namespace Data.CRUD
                                 mqTipoPrueba.Nombre = reader[1].ToString();
                                 mqTipoPrueba.RouteKey = reader[2].ToString();
                                 mqTipoPrueba.QueueName = reader[3].ToString();
+                                mqTipoPrueba.Es_Web = Convert.ToInt32(reader[4]);
                                 listaMQTipoPruebas.Add(mqTipoPrueba);
                             }
                         }
