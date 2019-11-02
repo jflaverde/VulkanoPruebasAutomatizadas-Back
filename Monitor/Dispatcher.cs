@@ -102,12 +102,8 @@ namespace Monitor
                            basicProperties: null,
                            body: estrategiaBuffer
                        );
-                }
-
-                    
+                }  
             }
-
-            
         }
     }
 }

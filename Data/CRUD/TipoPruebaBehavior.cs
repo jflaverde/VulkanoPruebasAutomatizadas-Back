@@ -25,19 +25,22 @@ namespace Data.CRUD
                                 T3.NOMBRE,
                                 T3.PARAMETROS,
                                 T3.MQTIPOPRUEBA_ID,
+								T4.NOMBRE,
                                 T2.ESTRATEGIA_ID,
                                 T2.NOMBRE,
                                 T0.HISTORIAL_ID,
                                 T0.FECHA_EJECUCION,
                                 T0.FECHA_FINALIZACION,
-                                T0.HORA_EJECUCION,
-                                T0.HORA_FINALIZACION,
-                                T0.ESTADO,
+                                CASE T0.ESTADO
+									WHEN 1 THEN 'EN COLA'
+									WHEN 2 THEN 'EN EJECUCION' 
+									WHEN 3 THEN 'FINALIZADO'END ESTADO,
                                 T0.RUTA_RESULTADOS
                                 FROM HISTORIAL_EJECUCION_PRUEBA T0 
                                 RIGHT JOIN ESTRATEGIA_TIPOPRUEBA T1 ON T0.ESTRATEGIA_TIPOPRUEBA=T1.ESTRATEGIA_TIPOPRUEBA_ID
                                 INNER JOIN ESTRATEGIA T2 ON T2.ESTRATEGIA_ID=T1.ESTRATEGIA_ID
                                 INNER JOIN TIPOPRUEBA T3 ON T3.TIPOPRUEBA_ID=T1.TIPOPRUEBA_ID
+								INNER JOIN MQTIPOPRUEBA T4 ON T4.MQTIPOPRUEBA_ID=T3.MQTIPOPRUEBA_ID
                                 WHERE 1=1");
 
             if (estrategia_id != 0)
@@ -76,22 +79,23 @@ namespace Data.CRUD
                                         Nombre = reader[1].ToString(),
                                         Parametros = reader[2].ToString()
                                     };
+                                    tipoPrueba.MQTipoPrueba.ID =  Convert.ToInt32(reader[3]);
+                                    tipoPrueba.MQTipoPrueba.Nombre = reader[4].ToString();
 
                                     listaPruebas.Add(tipoPrueba);
                                 }
 
-                                if (!string.IsNullOrEmpty(reader[6].ToString()))
+                                if (!string.IsNullOrEmpty(reader[7].ToString()))
                                 {
                                     HistorialEjecucionPruebaDTO historial = new HistorialEjecucionPruebaDTO();
 
-                                    historial.FechaEjecucion = Convert.ToDateTime(reader[7]);
-                                    historial.HoraEjecucion = !DBNull.Value.Equals(reader[9]) ? Convert.ToInt32(reader[9]) : 0;
-                                    historial.HoraFinalizacion = !DBNull.Value.Equals(reader[10])? Convert.ToInt32(reader[10]):0;
-                                    historial.Estado = Convert.ToInt32(reader[11]);
-                                    historial.RutaResultados = !DBNull.Value.Equals(reader[12].ToString()) ? reader[12].ToString() : string.Empty;
+                                    historial.FechaEjecucion = Convert.ToDateTime(reader[8]);
+                                    if (!DBNull.Value.Equals(reader[9]))
+                                        historial.FechaFinalizacion = Convert.ToDateTime(reader[9]);
+                                    historial.Estado = reader[10].ToString();
+                                    historial.RutaResultados = !DBNull.Value.Equals(reader[11].ToString()) ? reader[11].ToString() : string.Empty;
                                    
-                                    if (!DBNull.Value.Equals(reader[8]))
-                                        historial.FechaFinalizacion = Convert.ToDateTime(reader[8]);
+                                    
 
 
                                 listaPruebas.Find(e => e.ID == Convert.ToInt32(reader[0])).HistorialEjecuciones.Add(historial);
