@@ -1296,23 +1296,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ALEJANDRA SABOGAL\\.nuget\\packages\\": {},
+    "C:\\Users\\Takezo316\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "F:\\Universidad de los Andes\\MISO\\Pruebas Automaticas\\T Grupal\\VulkanoPruebasAutomatizadas-back\\WorkerCypress\\WorkerCypress.csproj",
+      "projectUniqueName": "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-back\\WorkerCypress\\WorkerCypress.csproj",
       "projectName": "WorkerCypress",
-      "projectPath": "F:\\Universidad de los Andes\\MISO\\Pruebas Automaticas\\T Grupal\\VulkanoPruebasAutomatizadas-back\\WorkerCypress\\WorkerCypress.csproj",
-      "packagesPath": "C:\\Users\\ALEJANDRA SABOGAL\\.nuget\\packages\\",
-      "outputPath": "F:\\Universidad de los Andes\\MISO\\Pruebas Automaticas\\T Grupal\\VulkanoPruebasAutomatizadas-back\\WorkerCypress\\obj\\",
+      "projectPath": "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-back\\WorkerCypress\\WorkerCypress.csproj",
+      "packagesPath": "C:\\Users\\Takezo316\\.nuget\\packages\\",
+      "outputPath": "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-back\\WorkerCypress\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\ALEJANDRA SABOGAL\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\Takezo316\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -1325,11 +1325,11 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "F:\\Universidad de los Andes\\MISO\\Pruebas Automaticas\\T Grupal\\VulkanoPruebasAutomatizadas-back\\Controller\\Controller.csproj": {
-              "projectPath": "F:\\Universidad de los Andes\\MISO\\Pruebas Automaticas\\T Grupal\\VulkanoPruebasAutomatizadas-back\\Controller\\Controller.csproj"
+            "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-back\\Controller\\Controller.csproj": {
+              "projectPath": "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-back\\Controller\\Controller.csproj"
             },
-            "F:\\Universidad de los Andes\\MISO\\Pruebas Automaticas\\T Grupal\\VulkanoPruebasAutomatizadas-back\\GeneralWorker\\GeneralWorker.csproj": {
-              "projectPath": "F:\\Universidad de los Andes\\MISO\\Pruebas Automaticas\\T Grupal\\VulkanoPruebasAutomatizadas-back\\GeneralWorker\\GeneralWorker.csproj"
+            "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-back\\GeneralWorker\\GeneralWorker.csproj": {
+              "projectPath": "D:\\Takezo316\\GitHub\\VulkanoPruebasAutomatizadas-back\\GeneralWorker\\GeneralWorker.csproj"
             }
           }
         }
