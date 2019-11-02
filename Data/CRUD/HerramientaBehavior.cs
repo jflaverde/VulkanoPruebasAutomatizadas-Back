@@ -18,7 +18,7 @@ namespace Data.CRUD
         {
             ReturnMessage mensaje = new ReturnMessage();
             string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-                            INSERT INTO HERRAMIENTA (NOMBRE) VALUES (@NOMBRE,@TIPO_PRUEBA,@ES_WEB)
+                            INSERT INTO HERRAMIENTA (NOMBRE,TIPO_PRUEBA,ES_WEB) VALUES (@NOMBRE,@TIPO_PRUEBA,@ES_WEB)
 
                             SELECT @@IDENTITY AS 'Identity';";
 
@@ -180,11 +180,11 @@ namespace Data.CRUD
             List<HerramientaDTO> listaHerramientas = new List<HerramientaDTO>();
             StringBuilder query = new StringBuilder().Append(@"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 							SELECT 
-							HERRAMIENTA_ID,
-							NOMBRE,
-                            TIPO_PRUEBA,
-                            ES_WEB
-							FROM HERRAMIENTA");
+                            T0.HERRAMIENTA_ID,
+                            T0.NOMBRE,
+                            T1.NOMBRE TipoPrueba,
+                            T0.ES_WEB
+                            FROM HERRAMIENTA T0 INNER JOIN MQTIPOPRUEBA T1 ON T0.TIPO_PRUEBA=T1.MQTIPOPRUEBA_ID");
 
             if (herramienta_id != 0)
             {
@@ -209,7 +209,9 @@ namespace Data.CRUD
                                 HerramientaDTO herramienta = new HerramientaDTO()
                                 {
                                     Herramienta_ID = Convert.ToInt32(reader[0]),
-                                    Nombre = reader[1].ToString()
+                                    Nombre = reader[1].ToString(),
+                                    Tipo_Prueba = reader[2].ToString(),
+                                    Es_Web = Convert.ToInt32(reader[3]) == 1 ? true : false
                                 };
                                 listaHerramientas.Add(herramienta);
                             }

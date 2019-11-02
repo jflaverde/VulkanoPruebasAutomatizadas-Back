@@ -30,11 +30,11 @@ namespace Data.CRUD
                 {
                     using (SqlCommand command = new SqlCommand(query, con))
                     {
-                        command.Parameters.Add(new SqlParameter("@NOMBRE", aplicacion.Nombre));
-                        command.Parameters.Add(new SqlParameter("@APLICACION_VERSION", aplicacion.Version));
-                        command.Parameters.Add(new SqlParameter("@RUTA_APLICACION", aplicacion.Ruta_Aplicacion));
+                        command.Parameters.Add(new SqlParameter("@NOMBRE", !string.IsNullOrEmpty(aplicacion.Nombre)?aplicacion.Nombre:string.Empty));
+                        command.Parameters.Add(new SqlParameter("@APLICACION_VERSION", !string.IsNullOrEmpty(aplicacion.Version)?aplicacion.Version:string.Empty));
+                        command.Parameters.Add(new SqlParameter("@RUTA_APLICACION", !string.IsNullOrEmpty(aplicacion.Ruta_Aplicacion)?aplicacion.Ruta_Aplicacion:string.Empty));
                         command.Parameters.Add(new SqlParameter("@ES_WEB", aplicacion.Es_Web));
-                        command.Parameters.Add(new SqlParameter("@DESCRIPCION", aplicacion.Descripcion));
+                        command.Parameters.Add(new SqlParameter("@DESCRIPCION", !string.IsNullOrEmpty(aplicacion.Descripcion)?aplicacion.Descripcion:string.Empty));
 
                         using (var reader = command.ExecuteReader())
                         {

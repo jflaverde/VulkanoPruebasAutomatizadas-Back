@@ -15,7 +15,7 @@ namespace Data.DTO
 
         public int HoraFinalizacion { get; set; }
 
-        public int Estado { get; set; }
+        public string Estado { get; set; }
 
         public string RutaResultados { get; set; }
     }
