@@ -1,28 +1,57 @@
-﻿using Data.DTO;
+﻿using Controller;
+using Data.DTO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using Controller;
 
 namespace WorkerWebsiteBDT
 {
     class Program
     {
+
         static void Main()
         {
             GeneralWorker.RabbitMQ rabbitMQ = new GeneralWorker.RabbitMQ();
-            var strategy = rabbitMQ.GetMessages("QUEUE_BDT");
+            EstrategiaDTO strategy = rabbitMQ.GetMessages("QUEUE_BDT");
 
+            // Create json file structure file
+            string projectPath = @"F:\Universidad de los Andes\MISO\Pruebas Automaticas\T Grupal\-201920_MISO4208\PrestashopTest";
+            string dataDestinationFolder = Path.Combine(projectPath, @"Prestashop.Core\fixtures\data.json");
+            ParametersRequest parameters = new ParametersRequest
+            {
+                ApiController = "dataprestashop.json",
+                Key = "c1893e20"
+            };
+            
+            JsonFile jsonFile = new JsonFile();
+            int numberDataGenerated = jsonFile.GenerateData(parameters, dataDestinationFolder);
+
+            // Read test scripts
+            ScriptFile scriptFile = new ScriptFile();
+            IEnumerable<string> featureFiles  = scriptFile.GetFeatureFiles(projectPath);
+
+            // Replace tokens with random position object of json file
+            foreach (string featureFile in featureFiles)
+            {
+                scriptFile.ReplaceTokens(featureFile, numberDataGenerated);
+            }
+
+            // Executes Cypress script
             if (strategy != null)
             {
-                TestCypress(strategy);
+                RunCypressTest(strategy);
             }
         }
 
-        static void TestCypress(EstrategiaDTO strategy)
+
+
+        /// <summary>
+        /// Run cypress test project
+        /// </summary>
+        /// <param name="strategy"><see cref="EstrategiaDTO"/></param>
+        static void RunCypressTest(EstrategiaDTO strategy)
         {
             foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
             {
@@ -54,7 +83,8 @@ namespace WorkerWebsiteBDT
                 };
                 var pNpmRunDist = Process.Start(psiNpmRunDist);
 
-                Directory.GetDirectories(destinationPath).ToList().ForEach(p => {
+                Directory.GetDirectories(destinationPath).ToList().ForEach(p =>
+                {
                     string[] packageJsonFile = Directory.GetFiles(p, "package.json");
                     if (packageJsonFile.Length == 1)
                     {
