@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Monitor\Monitor.csproj" />
+    <ProjectReference Include="..\ControllerFramework\Controller.csproj" />
   </ItemGroup>
 
 </Project>
