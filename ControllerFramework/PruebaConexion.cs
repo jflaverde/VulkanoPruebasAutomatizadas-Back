@@ -1,13 +1,13 @@
 ﻿using System;
-using Data;
+using DataFramework;
 
-namespace Controller
+namespace ControllerVulkano
 {
     public class PruebaConexion
     {
         public string TestConnection()
         {
-            Data.ConexionDB con = new ConexionDB();
+            DataFramework.ConexionDB con = new ConexionDB();
             var conexion = con.ConectarDB();
             con.OpenConnection();
 

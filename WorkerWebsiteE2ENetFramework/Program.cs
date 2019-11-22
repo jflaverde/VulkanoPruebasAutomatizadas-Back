@@ -1,11 +1,11 @@
-﻿using Data.DTO;
+﻿using DataFramework.DTO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using Controller;
+using ControllerVulkano;
 
 namespace WorkerWebsiteE2E
 {

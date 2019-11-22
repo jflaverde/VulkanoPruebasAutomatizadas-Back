@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Data.DTO
+namespace DataFramework.DTO
 {
     public class TipoPruebaDTO
     {
@@ -15,14 +15,16 @@ namespace Data.DTO
         public MQTipoPruebaDTO MQTipoPrueba { get; set; }
         public List<HistorialEjecucionPruebaDTO> HistorialEjecuciones { get; set; }
         public int CantidadEjecuciones { get; set; }
-        public DateTime TiempoEjecucion { get; set; }
+        public double TiempoEjecucion { get; set; }
         public string Semilla { get; set; }
 
+        public HerramientaDTO Herramienta { get; set; }
         public TipoPruebaDTO() {
             HistorialEjecuciones = new List<HistorialEjecucionPruebaDTO>();
             MQTipoPrueba = new MQTipoPruebaDTO();
             Estado = new EstadoDTO();
             Script = new ScriptDTO();
+            Herramienta = new HerramientaDTO();
         }
     }
 }

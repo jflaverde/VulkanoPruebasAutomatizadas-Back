@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Data.Messages
+namespace DataFramework.Messages
 {
     public class ReturnMessage
     {

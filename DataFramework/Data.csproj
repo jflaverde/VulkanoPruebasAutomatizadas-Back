@@ -49,6 +49,7 @@
     <Compile Include="CRUD\MQTipoPruebaBehavior.cs" />
     <Compile Include="CRUD\ScriptBehavior.cs" />
     <Compile Include="CRUD\TipoPruebaBehavior.cs" />
+    <Compile Include="CRUD\WorkerBehavior.cs" />
     <Compile Include="DTO\AplicacionDTO.cs" />
     <Compile Include="DTO\AppVersionDTO.cs" />
     <Compile Include="DTO\EstadoDTO.cs" />
@@ -58,6 +59,7 @@
     <Compile Include="DTO\MQTipoPruebaDTO.cs" />
     <Compile Include="DTO\ScriptDTO.cs" />
     <Compile Include="DTO\TipoPruebaDTO.cs" />
+    <Compile Include="DTO\WorkerStatus.cs" />
     <Compile Include="Messages\ReturnMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

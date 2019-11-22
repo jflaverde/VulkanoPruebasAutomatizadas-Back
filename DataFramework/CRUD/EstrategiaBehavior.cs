@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Data.DTO;
+using DataFramework.DTO;
 using System.Data.SqlClient;
-using Data.Messages;
+using DataFramework.Messages;
 using System.Linq;
 
-namespace Data.CRUD
+namespace DataFramework.CRUD
 {
     public class EstrategiaBehavior:ConexionDB
     {
@@ -319,12 +319,20 @@ namespace Data.CRUD
                                        ([NOMBRE]
                                        ,[PARAMETROS]
                                        ,[SCRIPT_ID]
-                                       ,[MQTIPOPRUEBA_ID])
+                                       ,[MQTIPOPRUEBA_ID]
+                                       ,[CANTIDAD_EJECUCIONES]
+                                       ,[TIEMPO_EJECUCION]
+                                       ,[SEMILLA]
+                                       ,[HERRAMIENTA_ID])
                                  VALUES(
                                        @Nombre,
                                        @Parametros,
                                        @Script,
-                                       @MQTipoPrueba)
+                                       @MQTipoPrueba,
+                                       @CantidadEjecuciones,
+                                       @TiempoEjecucion,
+                                       @Semilla,
+                                       @HerramientaID)
 
                                 SELECT @@IDENTITY AS 'Identity';";
 
@@ -341,6 +349,10 @@ namespace Data.CRUD
                             command.Parameters.Add(new SqlParameter("@Parametros", string.IsNullOrEmpty(tipoPrueba.Parametros)?string.Empty:tipoPrueba.Parametros));
                             command.Parameters.Add(new SqlParameter("@MQTipoPrueba", tipoPrueba.MQTipoPrueba.ID));
                             command.Parameters.Add(new SqlParameter("@Script", script_id));
+                            command.Parameters.Add(new SqlParameter("@CantidadEjecuciones", tipoPrueba.CantidadEjecuciones));
+                            command.Parameters.Add(new SqlParameter("@TiempoEjecucion", tipoPrueba.TiempoEjecucion));
+                            command.Parameters.Add(new SqlParameter("@Semilla", tipoPrueba.Semilla));
+                            command.Parameters.Add(new SqlParameter("@HerramientaID", tipoPrueba.Herramienta.Herramienta_ID));
                             using (var reader = command.ExecuteReader())
                             {
                                 while (reader.Read())
