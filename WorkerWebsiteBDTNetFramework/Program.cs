@@ -1,35 +1,43 @@
 ﻿using DataFramework.DTO;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
 using ControllerVulkano;
+
 
 namespace WorkerWebsiteBDT
 {
     class Program
     {
+
         static void Main()
         {
             GeneralWorkerNetFramework.RabbitMQ rabbitMQ = new GeneralWorkerNetFramework.RabbitMQ();
-            var strategy = rabbitMQ.GetMessages("QUEUE_BDT");
+            EstrategiaDTO strategy = rabbitMQ.GetMessages("QUEUE_BDT");
 
-            if (strategy != null)
+            //TODO: Reemplazar la cantidad de iteraciones por el valor del mensaje
+            for (int i = 0; i < 10; i++)
             {
-                TestCypress(strategy);
+                StartProcess(strategy);
             }
         }
 
-        static void TestCypress(EstrategiaDTO strategy)
+        /// <summary>
+        /// Start with the process of environment preparation and test execution
+        /// </summary>
+        /// <param name="strategy"><see cref="EstrategiaDTO"/></param>
+        static void StartProcess(EstrategiaDTO strategy)
         {
+            // TODO: Reemplazar las siguientes variables por el valor del mensaje: projectPath, parameters
             foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
             {
                 TipoPruebaController tipoPruebaController = new TipoPruebaController();
+                ScriptFile scriptFile = new ScriptFile();
+
                 int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "");
 
-                string testProject = Path.Combine(GetScriptProjectPath(), @"wwwroot\uploads");
+                string testProject = Path.Combine(scriptFile.GetScriptProjectPath(), @"wwwroot\uploads");
                 string destinationFolder = @"C:\Temp";
                 string scriptPath = string.Concat(testProject, strategy.TipoPruebas.First().Script.Script);
                 string destinationPath = string.Concat(destinationFolder, @"\",
@@ -46,46 +54,33 @@ namespace WorkerWebsiteBDT
                 GeneralWorkerNetFramework.ActionsFile actionsFile = new GeneralWorkerNetFramework.ActionsFile();
                 actionsFile.UnzipFile(scriptPath, destinationFolder);
 
-                // Install the node modules for each of the test projects
-                var psiNpmRunDist = new ProcessStartInfo
+                // Create json file structure file
+                string projectPath = @"F:\Universidad de los Andes\MISO\Pruebas Automaticas\T Grupal\-201920_MISO4208\PrestashopTest";
+                string dataDestinationFolder = Path.Combine(projectPath, @"Prestashop.Core\fixtures\data.json");
+                ParametersRequest parameters = new ParametersRequest
                 {
-                    FileName = "cmd.exe",
-                    RedirectStandardInput = true,
+                    ApiController = "dataprestashop.json",
+                    Key = "c1893e20"
                 };
-                var pNpmRunDist = Process.Start(psiNpmRunDist);
 
-                Directory.GetDirectories(destinationPath).ToList().ForEach(p => {
-                    string[] packageJsonFile = Directory.GetFiles(p, "package.json");
-                    if (packageJsonFile.Length == 1)
-                    {
-                        pNpmRunDist.StandardInput.WriteLine(Path.GetPathRoot(p).Replace(@"\", ""));
-                        pNpmRunDist.StandardInput.WriteLine(string.Format("cd {0}", p));
-                        pNpmRunDist.StandardInput.WriteLine("npm i");
-                    }
-                });
+                JsonFile jsonFile = new JsonFile();
+                int numberDataGenerated = jsonFile.GenerateData(parameters, dataDestinationFolder);
 
-                pNpmRunDist.StandardInput.WriteLine("npx cypress run test");
-                pNpmRunDist.WaitForExit();
+                // Read test scripts
+                IEnumerable<string> featureFiles = scriptFile.GetFeatureFiles(projectPath);
 
-                tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "");
+                // Replace tokens with random position object of json file
+                foreach (string featureFile in featureFiles)
+                {
+                    scriptFile.ReplaceTokens(featureFile, numberDataGenerated);
+                }
+
+                // Executes Cypress script
+                if (strategy != null)
+                {
+                    scriptFile.RunCypressTest(strategy);
+                }
             }
-        }
-
-        /// <summary>
-        /// Get path of script project
-        /// </summary>
-        /// <returns>Path of script project</returns>
-        static string GetScriptProjectPath()
-        {
-            DirectoryInfo directory = Directory.GetParent(Directory.GetCurrentDirectory());
-            while (!directory.Name.Equals("VulkanoPruebasAutomatizadas-back"))
-            {
-                directory = directory.Parent;
-            }
-
-            directory = directory.Parent;
-            string testProject = Path.Combine(directory.FullName, "VulkanoPruebasAutomatizadas-Front");
-            return testProject;
         }
     }
 }
