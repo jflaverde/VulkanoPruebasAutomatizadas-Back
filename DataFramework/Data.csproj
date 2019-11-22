@@ -43,12 +43,14 @@
   <ItemGroup>
     <Compile Include="ConexionDB.cs" />
     <Compile Include="CRUD\AplicacionBehavior.cs" />
+    <Compile Include="CRUD\AppVersionBehavior.cs" />
     <Compile Include="CRUD\EstrategiaBehavior.cs" />
     <Compile Include="CRUD\HerramientaBehavior.cs" />
     <Compile Include="CRUD\MQTipoPruebaBehavior.cs" />
     <Compile Include="CRUD\ScriptBehavior.cs" />
     <Compile Include="CRUD\TipoPruebaBehavior.cs" />
     <Compile Include="DTO\AplicacionDTO.cs" />
+    <Compile Include="DTO\AppVersionDTO.cs" />
     <Compile Include="DTO\EstadoDTO.cs" />
     <Compile Include="DTO\EstrategiaDTO.cs" />
     <Compile Include="DTO\HerramientaDTO.cs" />

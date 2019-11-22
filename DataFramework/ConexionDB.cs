@@ -18,7 +18,7 @@ namespace Data
             string userID = "vulkanoadmin";
             string password = "Vulkano01";
 
-            string conexion = @"Server=tcp:vulkanoserver.database.windows.net,1433;Initial Catalog={0};Persist Security Info=False;User ID={1};Password={2};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            string conexion = @"Server=tcp:vulkano.database.windows.net,1433;Initial Catalog={0};Persist Security Info=False;User ID={1};Password={2};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             conexion = string.Format(conexion, Db, userID, password);
             Connection = new QC.SqlConnection(conexion);
