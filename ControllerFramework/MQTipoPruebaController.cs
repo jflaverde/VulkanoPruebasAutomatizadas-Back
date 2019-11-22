@@ -1,10 +1,10 @@
-﻿using Data.CRUD;
-using Data.DTO;
+﻿using DataFramework.CRUD;
+using DataFramework.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Controller
+namespace ControllerVulkano
 {
     public class MQTipoPruebaController
     {

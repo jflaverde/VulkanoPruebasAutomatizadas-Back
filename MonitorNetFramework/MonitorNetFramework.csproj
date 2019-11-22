@@ -62,9 +62,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ControllerFramework\Controller.csproj">
+    <ProjectReference Include="..\ControllerFramework\ControllerVulkano.csproj">
       <Project>{8704311a-20ad-4541-8a66-dc0bfe54d6e7}</Project>
-      <Name>Controller</Name>
+      <Name>ControllerVulkano</Name>
     </ProjectReference>
     <ProjectReference Include="..\DataFramework\Data.csproj">
       <Project>{29629a29-8782-4443-90f4-eb3e83ffb090}</Project>

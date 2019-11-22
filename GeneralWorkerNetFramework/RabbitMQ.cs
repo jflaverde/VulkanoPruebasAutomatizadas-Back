@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Data.DTO;
+using DataFramework.DTO;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -33,7 +33,7 @@ namespace GeneralWorkerNetFramework
                 var base64Decoded = Encoding.UTF8.GetString(body);
                 EstrategiaDTO estrategia = JsonConvert.DeserializeObject<EstrategiaDTO>(base64Decoded);
 
-                Controller.ScriptController scriptController = new Controller.ScriptController();
+                ControllerVulkano.ScriptController scriptController = new ControllerVulkano.ScriptController();
 
                 if (estrategia != null)
                 {

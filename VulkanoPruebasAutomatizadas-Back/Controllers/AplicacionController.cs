@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Controller;
-using Data.DTO;
-using Data.Messages;
+using ControllerVulkano;
+using DataFramework.DTO;
+using DataFramework.Messages;
 
 namespace VulkanoPruebasAutomatizadas_Back.Controllers
 {
@@ -18,7 +18,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet]
         public ReturnMessage GetAplicacion()
         {
-            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            ControllerVulkano.AplicacionController aplicacionController = new ControllerVulkano.AplicacionController();
             return aplicacionController.SelectAplicacion(0);
         }
 
@@ -27,7 +27,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet("{id}", Name = "GetAplicacion")]
         public ReturnMessage Get(int id)
         {
-            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            ControllerVulkano.AplicacionController aplicacionController = new ControllerVulkano.AplicacionController();
             return aplicacionController.SelectAplicacion(id);
         }
 
@@ -35,7 +35,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpPost]
         public ReturnMessage Post([FromBody] AplicacionDTO aplicacion)
         {
-            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            ControllerVulkano.AplicacionController aplicacionController = new ControllerVulkano.AplicacionController();
             return aplicacionController.CreateAplicacion(aplicacion);
         }
 
@@ -43,7 +43,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
        [HttpPut("{id}")]
         public ReturnMessage Put([FromBody] AplicacionDTO aplicacion)
         {
-            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            ControllerVulkano.AplicacionController aplicacionController = new ControllerVulkano.AplicacionController();
             return aplicacionController.UpdateAplicacion(aplicacion);
         }
 
@@ -52,7 +52,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
 
         public ReturnMessage Delete(int aplicacion_id)
         {
-            Controller.AplicacionController aplicacionController = new Controller.AplicacionController();
+            ControllerVulkano.AplicacionController aplicacionController = new ControllerVulkano.AplicacionController();
             return aplicacionController.DeleteAplicacion(aplicacion_id);
 
         }

@@ -1,11 +1,11 @@
-﻿using Data.DTO;
-using Data.Messages;
+﻿using DataFramework.DTO;
+using DataFramework.Messages;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Text;
 
-namespace Data.CRUD
+namespace DataFramework.CRUD
 {
     public class TipoPruebaBehavior:ConexionDB
     {

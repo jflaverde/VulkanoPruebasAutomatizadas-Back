@@ -1,11 +1,11 @@
-﻿using Data.CRUD;
-using Data.DTO;
-using Data.Messages;
+﻿using DataFramework.CRUD;
+using DataFramework.DTO;
+using DataFramework.Messages;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Controller
+namespace ControllerVulkano
 {
     public class ScriptController
     {
@@ -42,6 +42,22 @@ namespace Controller
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public ReturnMessage UpdateScript(ScriptDTO script)
+        {
+            ReturnMessage returnMessage = new ReturnMessage();
+            try
+            {
+                ScriptBehavior scriptBehavior = new ScriptBehavior();
+                return scriptBehavior.UpdateScript(script);
+            }
+            catch (Exception ex)
+            {
+                returnMessage.Mensaje = ex.Message;
+                returnMessage.TipoMensaje = TipoMensaje.Error;
+                throw;
             }
         }
     }

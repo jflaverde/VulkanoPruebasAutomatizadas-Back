@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Data.DTO;
+using DataFramework.DTO;
 using System.Data.SqlClient;
-using Data.Messages;
+using DataFramework.Messages;
 using System.Linq;
 
-namespace Data.CRUD
+namespace DataFramework.CRUD
 {
     public class HerramientaBehavior:ConexionDB
     {

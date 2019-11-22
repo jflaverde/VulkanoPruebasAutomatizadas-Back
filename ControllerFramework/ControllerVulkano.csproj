@@ -49,6 +49,7 @@
     <Compile Include="PruebaConexion.cs" />
     <Compile Include="ScriptController.cs" />
     <Compile Include="TipoPruebaController.cs" />
+    <Compile Include="WorkerController.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataFramework\Data.csproj">

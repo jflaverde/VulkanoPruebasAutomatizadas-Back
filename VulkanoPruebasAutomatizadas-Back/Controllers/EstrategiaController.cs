@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Controller;
-using Data.DTO;
-using Data.Messages;
+using ControllerVulkano;
+using DataFramework.DTO;
+using DataFramework.Messages;
 
 namespace VulkanoPruebasAutomatizadas_Back.Controllers
 {
@@ -18,7 +18,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet]
         public List<EstrategiaDTO> Get()
         {
-            Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
+            ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
             return estrategiaController.SelectEstrategia(0);
 
         }
@@ -27,7 +27,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet("{id}", Name = "GetEstrategia")]
         public List<EstrategiaDTO> Get(int id)
         {
-            Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
+            ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
             return estrategiaController.SelectEstrategia(id);
         }
 
@@ -35,14 +35,14 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpPost]
         public ReturnMessage Post([FromBody] EstrategiaDTO estrategia)
         {
-            Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
+            ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
             return estrategiaController.CreateEstrategia(estrategia);
         }
 
         [HttpPost("{id}", Name = "PostPrueba")]
         public ReturnMessage PostPrueba([FromBody]EstrategiaDTO estrategia)
         {
-            Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
+            ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
             return estrategiaController.AddTipoPrueba(estrategia);
         }
 
@@ -50,7 +50,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpPut("{id}")]
         public ReturnMessage Put([FromBody] EstrategiaDTO estrategia)
         {
-            Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
+            ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
             return estrategiaController.UpdateEstrategia(estrategia);
         }
 
@@ -58,7 +58,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpDelete("{id}")]
         public ReturnMessage Delete(int estrategiaID)
         {
-            Controller.EstrategiaController estrategiaController = new Controller.EstrategiaController();
+            ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
             return estrategiaController.DeleteEstrategia(estrategiaID);
         }
     }

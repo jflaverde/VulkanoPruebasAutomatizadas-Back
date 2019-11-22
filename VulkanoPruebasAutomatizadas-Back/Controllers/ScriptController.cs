@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.DTO;
-using Data.Messages;
+using DataFramework.DTO;
+using DataFramework.Messages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,7 +18,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpPost]
         public ReturnMessage Post([FromBody] ScriptDTO script)
         {
-            Controller.ScriptController scriptController = new Controller.ScriptController();
+            ControllerVulkano.ScriptController scriptController = new ControllerVulkano.ScriptController();
             return scriptController.AddScript(script);
         }
 

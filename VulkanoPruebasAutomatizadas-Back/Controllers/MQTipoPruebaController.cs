@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.DTO;
+using DataFramework.DTO;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +16,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet]
         public IEnumerable<MQTipoPruebaDTO> Get()
         {
-            Controller.MQTipoPruebaController mQTipoPruebaController = new Controller.MQTipoPruebaController();
+            ControllerVulkano.MQTipoPruebaController mQTipoPruebaController = new ControllerVulkano.MQTipoPruebaController();
             return mQTipoPruebaController.SelectMQTipoPrueba(0);
         }
 
@@ -24,7 +24,7 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet("{id}", Name = "GetMQTipoPrueba")]
         public MQTipoPruebaDTO Get(int id)
         {
-            Controller.MQTipoPruebaController mQTipoPruebaController = new Controller.MQTipoPruebaController();
+            ControllerVulkano.MQTipoPruebaController mQTipoPruebaController = new ControllerVulkano.MQTipoPruebaController();
             return mQTipoPruebaController.SelectMQTipoPrueba(id).First();
         }
 

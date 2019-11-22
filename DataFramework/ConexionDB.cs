@@ -2,7 +2,7 @@
 using QC = System.Data.SqlClient;
 
 
-namespace Data
+namespace DataFramework
 {
     public class ConexionDB
     {

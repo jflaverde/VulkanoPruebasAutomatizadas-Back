@@ -1,10 +1,10 @@
-﻿using Data.DTO;
+﻿using DataFramework.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Data.SqlClient;
 
-namespace Data.CRUD
+namespace DataFramework.CRUD
 {
     public class MQTipoPruebaBehavior: ConexionDB
     {
