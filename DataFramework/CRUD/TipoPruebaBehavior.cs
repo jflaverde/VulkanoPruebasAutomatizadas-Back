@@ -35,7 +35,9 @@ namespace DataFramework.CRUD
 									WHEN 1 THEN 'EN COLA'
 									WHEN 2 THEN 'EN EJECUCION' 
 									WHEN 3 THEN 'FINALIZADO'END ESTADO,
-                                T0.RUTA_RESULTADOS
+                                T0.RUTA_RESULTADOS,
+                                T3.API_KEY,
+                                T3.API_CONTROLLER
                                 FROM HISTORIAL_EJECUCION_PRUEBA T0 
                                 RIGHT JOIN ESTRATEGIA_TIPOPRUEBA T1 ON T0.ESTRATEGIA_TIPOPRUEBA=T1.ESTRATEGIA_TIPOPRUEBA_ID
                                 INNER JOIN ESTRATEGIA T2 ON T2.ESTRATEGIA_ID=T1.ESTRATEGIA_ID
@@ -77,7 +79,9 @@ namespace DataFramework.CRUD
                                     {
                                         ID = Convert.ToInt32(reader[0]),
                                         Nombre = reader[1].ToString(),
-                                        Parametros = reader[2].ToString()
+                                        Parametros = reader[2].ToString(),
+                                        ApiKey = reader[12].ToString(),
+                                        ApiController = reader[13].ToString()
                                     };
                                     tipoPrueba.MQTipoPrueba.ID =  Convert.ToInt32(reader[3]);
                                     tipoPrueba.MQTipoPrueba.Nombre = reader[4].ToString();

@@ -323,7 +323,9 @@ namespace DataFramework.CRUD
                                        ,[CANTIDAD_EJECUCIONES]
                                        ,[TIEMPO_EJECUCION]
                                        ,[SEMILLA]
-                                       ,[HERRAMIENTA_ID])
+                                       ,[HERRAMIENTA_ID]
+                                       ,[API_KEY]
+                                       ,[API_CONTROLLER])
                                  VALUES(
                                        @Nombre,
                                        @Parametros,
@@ -332,7 +334,9 @@ namespace DataFramework.CRUD
                                        @CantidadEjecuciones,
                                        @TiempoEjecucion,
                                        @Semilla,
-                                       @HerramientaID)
+                                       @HerramientaID,
+                                       @ApiKey,
+                                       @ApiController)
 
                                 SELECT @@IDENTITY AS 'Identity';";
 
@@ -353,6 +357,8 @@ namespace DataFramework.CRUD
                             command.Parameters.Add(new SqlParameter("@TiempoEjecucion", tipoPrueba.TiempoEjecucion));
                             command.Parameters.Add(new SqlParameter("@Semilla", tipoPrueba.Semilla));
                             command.Parameters.Add(new SqlParameter("@HerramientaID", tipoPrueba.Herramienta.Herramienta_ID));
+                            command.Parameters.Add(new SqlParameter("@ApiKey", tipoPrueba.ApiKey));
+                            command.Parameters.Add(new SqlParameter("@ApiController", tipoPrueba.ApiController));
                             using (var reader = command.ExecuteReader())
                             {
                                 while (reader.Read())
