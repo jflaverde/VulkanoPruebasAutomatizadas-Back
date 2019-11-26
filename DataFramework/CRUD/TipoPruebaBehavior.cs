@@ -137,9 +137,9 @@ namespace DataFramework.CRUD
         /// <param name="ejecucion_id"></param>
         /// <param name="ruta_resultados"></param>
         /// <returns></returns>
-        public int InsertEjecucionTipoPrueba(int estrategia_id,int prueba_id,int ejecucion_id,string ruta_resultados)
+        public int InsertEjecucionTipoPrueba(int estrategia_id,int prueba_id,int ejecucion_id,string ruta_resultados,int estado_id)
         {
-            string query = @"EXEC [SPINSERTAR_EJECUCION] @ESTRATEGIA_ID,@PRUEBA_ID,@EJECUCION_ID,@RUTA_RESULTADOS";
+            string query = @"EXEC [SPINSERTAR_EJECUCION] @ESTRATEGIA_ID,@PRUEBA_ID,@EJECUCION_ID,@RUTA_RESULTADOS,@ESTADO_ID";
 
             using (var con = ConectarDB())
             {
@@ -154,6 +154,7 @@ namespace DataFramework.CRUD
                         command.Parameters.Add(new SqlParameter("@PRUEBA_ID", prueba_id));
                         command.Parameters.Add(new SqlParameter("@EJECUCION_ID", ejecucion_id));
                         command.Parameters.Add(new SqlParameter("@RUTA_RESULTADOS", ruta_resultados));
+                        command.Parameters.Add(new SqlParameter("@ESTADO_ID", estado_id));
 
                         using (var reader = command.ExecuteReader())
                         {

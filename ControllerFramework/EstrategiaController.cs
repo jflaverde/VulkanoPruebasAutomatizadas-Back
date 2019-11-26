@@ -31,6 +31,31 @@ namespace ControllerVulkano
             }
         }
 
+        /// <summary>
+        /// Status estrategia
+        /// </summary>
+        /// <param name="estrategiaID"></param>
+        /// <returns></returns>
+        public Dictionary<int, string> GetEstrategiaStatus(int estrategiaID)
+        {
+            try
+            {
+                //logica de negocio aquí
+                EstrategiaBehavior estrategiaBehavior = new EstrategiaBehavior();
+                return estrategiaBehavior.GetEstrategiaStatus(estrategiaID);
+            }
+            catch (Exception ex)
+            {
+                return new Dictionary<int, string>();
+            }
+            
+
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="estrategia"></param>
+        /// <returns></returns>
         public ReturnMessage UpdateEstrategia(EstrategiaDTO estrategia)
         {
             try
@@ -48,6 +73,11 @@ namespace ControllerVulkano
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="estrategiaID"></param>
+        /// <returns></returns>
         public List<EstrategiaDTO> SelectEstrategia(int estrategiaID)
         {
             try
@@ -62,6 +92,11 @@ namespace ControllerVulkano
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="estrategiaID"></param>
+        /// <returns></returns>
         public ReturnMessage DeleteEstrategia(int estrategiaID)
         {
             try
@@ -79,6 +114,11 @@ namespace ControllerVulkano
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="estrategia"></param>
+        /// <returns></returns>
         public ReturnMessage AddTipoPrueba(EstrategiaDTO estrategia)
         {
             try

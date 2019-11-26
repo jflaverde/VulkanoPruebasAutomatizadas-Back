@@ -37,7 +37,7 @@ namespace WorkerWebsiteBDT
                 ScriptFile scriptFile = new ScriptFile();
 
                 //guarda en el historico de ejecucion de pruebas
-                int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "");
+                int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "",EstadoEnum.EnEjecucion);
 
                 //ruta donde se encuentra el archivo del script
                 string testProject = Path.Combine(scriptFile.GetScriptProjectPath(), ConfigurationManager.AppSettings["RutaScript"]);
@@ -117,7 +117,7 @@ namespace WorkerWebsiteBDT
                     Console.WriteLine(output);
                     //pNpmRunDist.WaitForExit();
                     //marca como finalizado
-                    tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "");
+                    tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "",EstadoEnum.Finalizado);
                 }
             }
         }
