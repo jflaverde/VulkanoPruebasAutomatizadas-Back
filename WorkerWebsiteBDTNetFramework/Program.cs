@@ -13,7 +13,6 @@ namespace WorkerWebsiteBDT
 {
     class Program
     {
-
         static void Main()
         {
             GeneralWorkerNetFramework.RabbitMQ rabbitMQ = new GeneralWorkerNetFramework.RabbitMQ();

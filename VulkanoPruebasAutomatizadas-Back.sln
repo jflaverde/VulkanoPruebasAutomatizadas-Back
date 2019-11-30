@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29230.47
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VulkanoPruebasAutomatizadas-Back", "VulkanoPruebasAutomatizadas-Back\VulkanoPruebasAutomatizadas-Back.csproj", "{C2043C18-3EBE-4991-9860-B63E754E827B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerAndroidNetFramework", "WorkerAndroidNetFramework\WorkerAndroidNetFramework.csproj", "{1B07D837-3B90-41F1-98D0-4BCB147B0BF8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerAndroidRandomNetFramework", "WorkerAndroidRandomNetFramework\WorkerAndroidRandomNetFramework.csproj", "{3A072373-9820-486D-B276-83A2B3A828F6}"
@@ -31,10 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{C2043C18-3EBE-4991-9860-B63E754E827B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C2043C18-3EBE-4991-9860-B63E754E827B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C2043C18-3EBE-4991-9860-B63E754E827B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C2043C18-3EBE-4991-9860-B63E754E827B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1B07D837-3B90-41F1-98D0-4BCB147B0BF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1B07D837-3B90-41F1-98D0-4BCB147B0BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1B07D837-3B90-41F1-98D0-4BCB147B0BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
