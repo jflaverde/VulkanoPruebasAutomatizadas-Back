@@ -213,8 +213,6 @@ namespace DataFramework.CRUD
 							SELECT 
 							APLICACION_ID,
 							NOMBRE,
-							APLICACION_VERSION,
-							RUTA_APLICACION,
 							ES_WEB,
 							DESCRIPCION
 							FROM APLICACION");
@@ -243,10 +241,8 @@ namespace DataFramework.CRUD
                                 {
                                     Aplicacion_ID = Convert.ToInt32(reader[0]),
                                     Nombre = reader[1].ToString(),
-                                    Version = reader[2].ToString(),
-                                    Ruta_Aplicacion = reader[3].ToString(),
-                                    Es_Web = Convert.ToInt32(reader[4]) == 1 ? true : false,
-                                    Descripcion = reader[5].ToString()
+                                    Es_Web = Convert.ToInt32(reader[2]) == 1 ? true : false,
+                                    Descripcion = reader[3].ToString()
                                 };
                                 listaAplicaciones.Add(aplicacion);
                             }

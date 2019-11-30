@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Data.DTO;
+using DataFramework.DTO;
 using System.Data.SqlClient;
 using DataFramework.Messages;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace Data.CRUD
         {
             ReturnMessage mensaje = new ReturnMessage();
             string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-                            INSERT INTO APPVERSION (APLICACION_ID, NUMERO) VALUES (@APLICACION_ID,@NUMERO)
+                            INSERT INTO APPVERSION (APLICACION_ID, NUMERO,RUTA_APLICACION) VALUES (@APLICACION_ID,@NUMERO,@RUTA_APLICACION)
 
                             SELECT @@IDENTITY AS 'Identity';";
 
@@ -33,6 +33,7 @@ namespace Data.CRUD
                     {
                         command.Parameters.Add(new SqlParameter("@APLICACION_ID", appVersion.Aplicacion_id));
                         command.Parameters.Add(new SqlParameter("@NUMERO", appVersion.Numero));
+                        command.Parameters.Add(new SqlParameter("@RUTA_APLICACION", appVersion.Ruta_Aplicacion));
 
                         using (var reader = command.ExecuteReader())
                         {
