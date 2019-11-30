@@ -151,7 +151,9 @@ namespace WorkerAndroid
 
             response = JsonConvert.DeserializeObject(output);
 
-
+            //For the results is used arnForRun
+            //for instance:
+            //arn:aws:devicefarm:us-west-2:813226252700:run:45bfef00-da01-48d6-bc69-2b2c7f6fb425/ff7d0b49-162b-4bc2-9ee9-9cdc96a1c239
         }
     }
 }

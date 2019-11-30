@@ -2,6 +2,9 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.IO;
+using System.IO.Compression;
+using System.Text;
 
 namespace WorkerAndroidRandom
 {
@@ -9,6 +12,76 @@ namespace WorkerAndroidRandom
     {
         static void Main(string[] args)
         {
+            string times = "50";
+            string delay = "0.2";
+            string seed1;
+            string seed2;
+            string seed3;
+            string seed4;
+            string completeSeed = "";
+
+            if (completeSeed == "")
+            {
+                seed1 = new Random().Next(0, 999999999).ToString();
+                seed2 = new Random().Next(0, 999999999).ToString();
+                seed3 = new Random().Next(0, 999999999).ToString();
+                seed4 = new Random().Next(0, 999999999).ToString();
+                completeSeed = seed1 + seed2 + seed3 + seed4;
+            }
+
+            string fileName = "C:\\Users\\rafael.bermudez\\source\\repos\\worker\\Random\\features\\monkey.feature";
+
+            string zipFile = "features.zip";
+            string featuresPath = @"..\..\..\features";
+            string zipPath = @"..\..\..\" + zipFile;
+
+            try
+            {
+                // Check if file already exists. If yes, delete it.     
+                if (File.Exists(fileName))
+                {
+                    File.Delete(fileName);
+                }
+
+                // Create a new file     
+                using (FileStream fs = File.Create(fileName))
+                {
+                    // Add some text to file    
+                    Byte[] title = new UTF8Encoding(true).GetBytes("Feature: Monkey Testing");
+                    fs.Write(title, 0, title.Length);
+
+                    Byte[] newLine = new UTF8Encoding(true).GetBytes("\n");
+                    fs.Write(newLine, 0, newLine.Length);
+
+                    Byte[] scenarioTitle = new UTF8Encoding(true).GetBytes("Scenario: Random touch");
+                    fs.Write(newLine, 0, newLine.Length);
+
+                    Byte[] author = new UTF8Encoding(true).GetBytes("    Given I make " + times + " events with a waiting time of " + delay + " with seed " + completeSeed);
+                    fs.Write(author, 0, author.Length);
+                }
+
+                // Open the stream and read it back.    
+                using (StreamReader sr = File.OpenText(fileName))
+                {
+                    string s = "";
+                    while ((s = sr.ReadLine()) != null)
+                    {
+                        Console.WriteLine(s);
+                    }
+                }
+
+                if (File.Exists(zipPath))
+                {
+                    File.Delete(zipPath);
+                }
+
+                ZipFile.CreateFromDirectory(featuresPath, zipPath);
+            }
+            catch (Exception Ex)
+            {
+                Console.WriteLine(Ex.ToString());
+            }
+
             //Create upload for apk
             String cmd = @"/C C:\PROGRA~1\Amazon\AWSCLI\bin\aws devicefarm create-upload --project-arn arn:aws:devicefarm:us-west-2:813226252700:project:45bfef00-da01-48d6-bc69-2b2c7f6fb425 --name gnucash.apk --type ANDROID_APP";
 
@@ -127,13 +200,38 @@ namespace WorkerAndroidRandom
 
             Console.WriteLine("arnForRun: " + arnForRun);
 
-            Thread.Sleep(500000);
+            string status = "";
 
+            while (status != "COMPLETED" || status != "STOPPING")
+            {
+                //Check if finished
 
-            //Check if finished
+                cmd = @"/C C:\PROGRA~1\Amazon\AWSCLI\bin\aws devicefarm get-run --arn" + " \"" + arnForRun + "\"";
 
+                psiNpmRunDist = new ProcessStartInfo
+                {
+                    FileName = "cmd.exe",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    Arguments = cmd
+                };
+                pNpmRunDist = Process.Start(psiNpmRunDist);
 
-            cmd = @"/C C:\PROGRA~1\Amazon\AWSCLI\bin\aws devicefarm get-run --arn" + " \"" + arnForRun + "\"";
+                output = pNpmRunDist.StandardOutput.ReadToEnd();
+                Console.WriteLine(output);
+                response = JsonConvert.DeserializeObject(output);
+                status = response.run.status.ToString();
+
+                Thread.Sleep(60000);
+            }            
+          
+            //For the results is used arnForRun
+            //for example:
+            //arn:aws:devicefarm:us-west-2:813226252700:run:45bfef00-da01-48d6-bc69-2b2c7f6fb425/ff7d0b49-162b-4bc2-9ee9-9cdc96a1c239
+
+            //Screenshots results
+            cmd = @"/C C:\PROGRA~1\Amazon\AWSCLI\bin\aws devicefarm list-artifacts --arn" + " \"" + arnForRun + "\" --type SCREENSHOT";
 
             psiNpmRunDist = new ProcessStartInfo
             {
