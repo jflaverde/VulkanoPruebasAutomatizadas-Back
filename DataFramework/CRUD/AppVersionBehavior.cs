@@ -65,19 +65,20 @@ namespace Data.CRUD
         }
 
 
-        public List<AppVersionDTO> SelectAppVersion(int appversion_id)
+        public List<AppVersionDTO> SelectAppVersion(int aplicacion_id)
         {
             List<AppVersionDTO> listaAppVersiones = new List<AppVersionDTO>();
             StringBuilder query = new StringBuilder().Append(@"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
 							SELECT 
 							ID,
 							APLICACION_ID,
-                            NUMERO
+                            NUMERO,
+                            RUTA_APLICACION
 							FROM APPVERSION");
 
-            if (appversion_id != 0)
+            if (aplicacion_id != 0)
             {
-                query.Append(" WHERE ID=@ID");
+                query.Append(" WHERE APLICACION_ID=@APLICACION_ID");
             }
 
             using (var con = ConectarDB())
@@ -87,8 +88,8 @@ namespace Data.CRUD
                 {
                     using (SqlCommand command = new SqlCommand(query.ToString(), con))
                     {
-                        if (appversion_id != 0)
-                            command.Parameters.Add(new SqlParameter("@ID", appversion_id));
+                        if (aplicacion_id != 0)
+                            command.Parameters.Add(new SqlParameter("@APLICACION_ID", aplicacion_id));
 
                         using (var reader = command.ExecuteReader())
                         {
@@ -99,7 +100,8 @@ namespace Data.CRUD
                                 {
                                     AppVersion_id = Convert.ToInt32(reader[0]),
                                     Aplicacion_id = reader[1].ToString(),
-                                    Numero = reader[2].ToString()
+                                    Numero = reader[2].ToString(),
+                                    Ruta_Aplicacion=reader[3].ToString()
                                 };
                                 listaAppVersiones.Add(appVersion);
                             }

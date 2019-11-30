@@ -18,8 +18,8 @@ namespace DataFramework.CRUD
         {
             ReturnMessage mensaje = new ReturnMessage();
             string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-                            INSERT INTO ESTRATEGIA (NOMBRE,ESTADO_ID,APLICACION_ID) 
-                            VALUES (@NOMBRE,@ESTADO,@APLICACION)
+                            INSERT INTO ESTRATEGIA (NOMBRE,ESTADO_ID,APLICACION_ID,APPVERSION_ID) 
+                            VALUES (@NOMBRE,@ESTADO,@APLICACION,@APPVERSION_ID)
 
                             SELECT @@IDENTITY AS 'Identity';";
 
@@ -34,6 +34,7 @@ namespace DataFramework.CRUD
                         command.Parameters.Add(new SqlParameter("@NOMBRE", estrategia.Nombre));
                         command.Parameters.Add(new SqlParameter("@ESTADO", estrategia.Estado.ID));
                         command.Parameters.Add(new SqlParameter("@APLICACION", estrategia.Aplicacion.Aplicacion_ID));
+                        command.Parameters.Add(new SqlParameter("@APPVERSION_ID", estrategia.Version.AppVersion_id));
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
@@ -167,17 +168,18 @@ namespace DataFramework.CRUD
                             T2.ESTADO_ID,
                             T2.NOMBRE NOMBREESTADO,
                             T1.APLICACION_ID,
-                            T1.APLICACION_VERSION,
+                            T5.NUMERO,
                             T1.DESCRIPCION,
                             T1.ES_WEB,
                             T1.NOMBRE NOMBREAPLICACION,
-                            T1.RUTA_APLICACION,
+                            T5.RUTA_APLICACION,
 							T3.TIPOPRUEBA_ID,
 							T4.NOMBRE,
 							T4.MQTIPOPRUEBA_ID
                             FROM ESTRATEGIA T0 
                             INNER JOIN APLICACION T1 ON T0.APLICACION_ID=T1.APLICACION_ID
                             INNER JOIN ESTADO T2 ON T0.ESTADO_ID=T2.ESTADO_ID
+							INNER JOIN APPVERSION T5 ON T5.ID=T0.APPVERSION_ID
 							LEFT JOIN ESTRATEGIA_TIPOPRUEBA T3 ON T0.ESTRATEGIA_ID=T3.ESTRATEGIA_ID
 							LEFT JOIN TIPOPRUEBA T4 ON T3.TIPOPRUEBA_ID=T4.TIPOPRUEBA_ID");
 
@@ -453,10 +455,12 @@ namespace DataFramework.CRUD
 
             string query = @"INSERT INTO [dbo].[ESTRATEGIA_TIPOPRUEBA]
                                ([ESTRATEGIA_ID]
-                               ,[TIPOPRUEBA_ID])
+                               ,[TIPOPRUEBA_ID]
+                               ,[ESTADO_ID])
                              VALUES
                                    (@Estrategia_ID,
-                                   @TipoPrueba_ID)
+                                   @TipoPrueba_ID,
+                                   @Estado_ID)
 
                            SELECT @@IDENTITY AS 'Identity'; ";
 
@@ -471,6 +475,8 @@ namespace DataFramework.CRUD
                     {
                         command.Parameters.Add(new SqlParameter("@Estrategia_ID", estrategia_id));
                         command.Parameters.Add(new SqlParameter("@TipoPrueba_ID", tipoPrueba_id));
+                        command.Parameters.Add(new SqlParameter("@Estado_ID", 1));
+
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())

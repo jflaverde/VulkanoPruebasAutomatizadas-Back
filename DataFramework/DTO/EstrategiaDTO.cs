@@ -12,8 +12,11 @@ namespace DataFramework.DTO
         public AplicacionDTO Aplicacion { get; set; }
         public List<TipoPruebaDTO> TipoPruebas { get; set; }
 
+        public AppVersionDTO Version { get; set; }
+
         public EstrategiaDTO()
         {
+            Version = new AppVersionDTO();
             TipoPruebas = new List<TipoPruebaDTO>();
         }
     }

@@ -30,95 +30,112 @@ namespace WorkerWebsiteBDT
         /// <param name="strategy"><see cref="EstrategiaDTO"/></param>
         static void StartProcess(EstrategiaDTO strategy)
         {
-            foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
+            
+
+            try
             {
-                TipoPruebaController tipoPruebaController = new TipoPruebaController();
-                ScriptFile scriptFile = new ScriptFile();
+                WorkerStatus worker = new WorkerStatus();
+                worker.WorkerID = Convert.ToInt32(ConfigurationManager.AppSettings["WorkerID"]);
+                worker.Estado.ID = 6;
+                worker.TipoPrueba = "QUEUE_BDT";
+                WorkerController workerController = new WorkerController();
+                workerController.UpdateWorkerStatus(worker);
 
-                //guarda en el historico de ejecucion de pruebas
-                int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "",EstadoEnum.EnEjecucion);
-
-                //ruta donde se encuentra el archivo del script
-                string testProject = Path.Combine(scriptFile.GetScriptProjectPath(), ConfigurationManager.AppSettings["RutaScript"]);
-                //ruta destino temporal
-                string destinationFolder = @"C:\Temp";
-                string destinationPath = string.Concat(destinationFolder, @"\", tipoPrueba.Script.Script);
-                //ruta de origen del script
-                string scriptPath = string.Concat(testProject, tipoPrueba.Script.Script,tipoPrueba.Script.Nombre,tipoPrueba.Script.Extension);
-                
-                //si la ruta destino no existe se crea
-                if (!File.Exists(destinationPath))
+                foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
                 {
-                    Directory.CreateDirectory(destinationPath);
-                }
+                    TipoPruebaController tipoPruebaController = new TipoPruebaController();
+                    ScriptFile scriptFile = new ScriptFile();
 
-                // Extract the zip file
-                GeneralWorkerNetFramework.ActionsFile actionsFile = new GeneralWorkerNetFramework.ActionsFile();
-                actionsFile.UnzipFile(scriptPath, destinationPath);
 
-                // Create json structure file
-                //string projectPath = //@"F:\Universidad de los Andes\MISO\Pruebas Automaticas\T Grupal\-201920_MISO4208\PrestashopTest";
-                string dataDestinationFolder = Path.Combine(destinationPath, @"Prestashop.Core\fixtures\data.json");
-                //parametros de mockaroo
-                #region Mockaroo
-                ParametersRequest parameters = new ParametersRequest
-                {
-                    ApiController = tipoPrueba.ApiController,
-                    Key = tipoPrueba.ApiKey
-                };
+                    //guarda en el historico de ejecucion de pruebas
+                    int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "", EstadoEnum.EnEjecucion);
 
-                JsonFile jsonFile = new JsonFile();
-                int numberDataGenerated = jsonFile.GenerateData(parameters, dataDestinationFolder);
-                #endregion
-                // Reemplaza tokens del script
-                #region Reemplazar tokens
-                IEnumerable<string> featureFiles = scriptFile.GetFeatureFiles(destinationPath);
-                // Replace tokens with random position object of json file
-                foreach (string featureFile in featureFiles)
-                {
-                    scriptFile.ReplaceTokens(featureFile, numberDataGenerated);
-                }
-                #endregion
-                // Executes Cypress script
-                if (strategy != null)
-                {
-                    // Install the node modules for each of the test projects
-                    var psiNpmRunDist = new ProcessStartInfo
+                    //ruta donde se encuentra el archivo del script
+                    string testProject = Path.Combine(scriptFile.GetScriptProjectPath(), ConfigurationManager.AppSettings["RutaScript"]);
+                    //ruta destino temporal
+                    string destinationFolder = @"C:\Temp";
+                    string destinationPath = string.Concat(destinationFolder, @"\", tipoPrueba.Script.Script);
+                    //ruta de origen del script
+                    string scriptPath = string.Concat(testProject, tipoPrueba.Script.Script, tipoPrueba.Script.Nombre, tipoPrueba.Script.Extension);
+
+                    //si la ruta destino no existe se crea
+                    if (!File.Exists(destinationPath))
                     {
-                        FileName = "cmd.exe",
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        UseShellExecute=false
-
-                     
-                    };
-                    var pNpmRunDist = Process.Start(psiNpmRunDist);
-                    StringBuilder output = new StringBuilder();
-                    Directory.GetDirectories(destinationPath).ToList().ForEach(p =>
-                    {
-                        string[] packageJsonFile = Directory.GetFiles(p, "package.json",SearchOption.AllDirectories);
-
-                        foreach (var package in packageJsonFile)
-                        {
-                            pNpmRunDist.StandardInput.WriteLine(Path.GetPathRoot(package).Replace(@"\", ""));
-                            pNpmRunDist.StandardInput.WriteLine(string.Format("cd {0}", Directory.GetParent(package)));
-                            pNpmRunDist.StandardInput.WriteLine("npm i");
-                            Thread.Sleep(1000);
-                        }
-                    });
-
-                    pNpmRunDist.StandardInput.WriteLine("npx cypress run test " + tipoPrueba.Parametros);
-                    while (!pNpmRunDist.StandardOutput.EndOfStream)
-                    {
-                        output.AppendLine(pNpmRunDist.StandardOutput.ReadLine());
-                        // do something with line
+                        Directory.CreateDirectory(destinationPath);
                     }
-                    Console.WriteLine(output);
-                    //pNpmRunDist.WaitForExit();
-                    //marca como finalizado
-                    tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "",EstadoEnum.Finalizado);
+
+                    // Extract the zip file
+                    GeneralWorkerNetFramework.ActionsFile actionsFile = new GeneralWorkerNetFramework.ActionsFile();
+                    actionsFile.UnzipFile(scriptPath, destinationPath);
+
+                    // Create json structure file
+                    //string projectPath = //@"F:\Universidad de los Andes\MISO\Pruebas Automaticas\T Grupal\-201920_MISO4208\PrestashopTest";
+                    string dataDestinationFolder = Path.Combine(destinationPath, @"Prestashop.Core\fixtures\data.json");
+                    //parametros de mockaroo
+                    #region Mockaroo
+                    ParametersRequest parameters = new ParametersRequest
+                    {
+                        ApiController = tipoPrueba.ApiController,
+                        Key = tipoPrueba.ApiKey
+                    };
+
+                    JsonFile jsonFile = new JsonFile();
+                    int numberDataGenerated = jsonFile.GenerateData(parameters, dataDestinationFolder);
+                    #endregion
+                    // Reemplaza tokens del script
+                    #region Reemplazar tokens
+                    IEnumerable<string> featureFiles = scriptFile.GetFeatureFiles(destinationPath);
+                    // Replace tokens with random position object of json file
+                    foreach (string featureFile in featureFiles)
+                    {
+                        scriptFile.ReplaceTokens(featureFile, numberDataGenerated);
+                    }
+                    #endregion
+                    // Executes Cypress script
+                    if (strategy != null)
+                    {
+                        string package = Path.Combine(destinationPath, tipoPrueba.Script.Nombre, "BDT.TestProject");
+                        // Install the node modules for each of the test project
+
+                        var psiNpmRunDist = new ProcessStartInfo
+                        {
+                            FileName = "cmd.exe",
+                            RedirectStandardInput = true,
+                            UseShellExecute = false,
+                            WorkingDirectory = Directory.GetParent(package).FullName
+
+
+                        };
+
+                        var pNpmRunDist = Process.Start(psiNpmRunDist);
+                        StringBuilder output = new StringBuilder();
+                        pNpmRunDist.StandardInput.WriteLine("npm i");
+                        Thread.Sleep(1000);
+
+                        pNpmRunDist.StandardInput.WriteLine("npx cypress run test " + tipoPrueba.Parametros);
+                        pNpmRunDist.WaitForExit();
+                        //marca como finalizado
+                        tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "", EstadoEnum.Finalizado);
+                    }
                 }
+
             }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine("error " + ex);
+            }
+            finally
+            {
+                WorkerStatus worker = new WorkerStatus();
+                worker.WorkerID = Convert.ToInt32(ConfigurationManager.AppSettings["WorkerID"]);
+                worker.Estado.ID = 5;
+                worker.TipoPrueba = "QUEUE_BDT";
+                WorkerController workerController = new WorkerController();
+                workerController.UpdateWorkerStatus(worker);
+            }
+
+            
         }
     }
 }
