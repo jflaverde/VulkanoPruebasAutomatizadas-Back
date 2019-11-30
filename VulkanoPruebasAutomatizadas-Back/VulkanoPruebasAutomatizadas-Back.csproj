@@ -16,7 +16,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Monitor\Monitor.csproj" />
+    <ProjectReference Include="..\ControllerFramework\ControllerVulkano.csproj" />
+    <ProjectReference Include="..\MonitorNetFramework\MonitorNetFramework.csproj" />
   </ItemGroup>
 
 </Project>

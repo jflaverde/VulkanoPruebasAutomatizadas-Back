@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Data.Messages;
+using DataFramework.Messages;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Controller;
+using ControllerVulkano;
 
 namespace VulkanoPruebasAutomatizadas_Back.Controllers
 {
@@ -17,14 +17,14 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         [HttpGet("{estrategia_id}", Name = "GetPruebasEstrategia")]
         public ReturnMessage Get(int estrategia_id)
         {
-            Controller.TipoPruebaController tipoPruebaController = new Controller.TipoPruebaController();
+            ControllerVulkano.TipoPruebaController tipoPruebaController = new ControllerVulkano.TipoPruebaController();
             return tipoPruebaController.ListPruebas(estrategia_id, 0);
         }
 
         [HttpGet("{estrategia_id}/{tipoprueba_id}", Name = "GetPruebas")]
         public ReturnMessage Get(int estrategia_id, int tipoprueba_id)
         {
-            Controller.TipoPruebaController tipoPruebaController = new Controller.TipoPruebaController();
+            ControllerVulkano.TipoPruebaController tipoPruebaController = new ControllerVulkano.TipoPruebaController();
             return tipoPruebaController.ListPruebas(estrategia_id, tipoprueba_id);
         }
 
