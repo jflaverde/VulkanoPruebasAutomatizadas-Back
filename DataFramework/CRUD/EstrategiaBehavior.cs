@@ -10,7 +10,6 @@ namespace DataFramework.CRUD
 {
     public class EstrategiaBehavior:ConexionDB
     {
-
         /// <summary>
         /// Crea una estrategia
         /// </summary>
@@ -211,8 +210,13 @@ namespace DataFramework.CRUD
                                     estrategia.Estrategia_ID = Convert.ToInt32(reader[0]);
                                     estrategia.Nombre = reader[1].ToString();
                                     EstadoDTO estado = new EstadoDTO();
-                                    estado.ID = Convert.ToInt32(reader[2]);
-                                    estado.Nombre = reader[3].ToString();
+
+                                    //diccionario de estado
+                                    var estadoDictionary = GetEstrategiaStatus(estrategia.Estrategia_ID);
+                                    //estados
+                                    estado.ID = estadoDictionary.First().Key;
+                                    estado.Nombre = estadoDictionary.First().Value;
+                                    //agregar el estado
                                     estrategia.Estado = estado;
                                  
                                     AplicacionDTO aplicacion = new AplicacionDTO();
@@ -258,6 +262,49 @@ namespace DataFramework.CRUD
             }
             return listEstrategias;
         }
+
+
+        /// <summary>
+        /// obtiene el estado de la estrategia
+        /// </summary>
+        /// <param name="estrategiaID"></param>
+        /// <returns></returns>
+        public Dictionary<int,string> GetEstrategiaStatus(int estrategiaID)
+        {
+            Dictionary<int, string> estadoEstrategia = new Dictionary<int, string>();
+            string query = @"EXEC [dbo].[SPCONSULTARESTADOESTRATEGIA] @ESTRATEGIA_ID";
+
+            using (var con = ConectarDB())
+            {
+                con.Open();
+
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query.ToString(), con))
+                    {
+                        if (estrategiaID != 0)
+                            command.Parameters.Add(new SqlParameter("@ESTRATEGIA_ID", estrategiaID));
+
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                estadoEstrategia.Add(Convert.ToInt32(reader[0]), reader[1].ToString());
+                               
+                            }
+                        }
+                    }
+
+                }
+                catch(Exception ex)
+                {
+
+                }
+            }
+
+            return estadoEstrategia; 
+        }
+
 
         /// <summary>
         /// Borra una estrategia
@@ -323,7 +370,9 @@ namespace DataFramework.CRUD
                                        ,[CANTIDAD_EJECUCIONES]
                                        ,[TIEMPO_EJECUCION]
                                        ,[SEMILLA]
-                                       ,[HERRAMIENTA_ID])
+                                       ,[HERRAMIENTA_ID]
+                                       ,[API_KEY]
+                                       ,[API_CONTROLLER])
                                  VALUES(
                                        @Nombre,
                                        @Parametros,
@@ -332,7 +381,9 @@ namespace DataFramework.CRUD
                                        @CantidadEjecuciones,
                                        @TiempoEjecucion,
                                        @Semilla,
-                                       @HerramientaID)
+                                       @HerramientaID,
+                                       @ApiKey,
+                                       @ApiController)
 
                                 SELECT @@IDENTITY AS 'Identity';";
 
@@ -353,6 +404,8 @@ namespace DataFramework.CRUD
                             command.Parameters.Add(new SqlParameter("@TiempoEjecucion", tipoPrueba.TiempoEjecucion));
                             command.Parameters.Add(new SqlParameter("@Semilla", tipoPrueba.Semilla));
                             command.Parameters.Add(new SqlParameter("@HerramientaID", tipoPrueba.Herramienta.Herramienta_ID));
+                            command.Parameters.Add(new SqlParameter("@ApiKey", tipoPrueba.ApiKey));
+                            command.Parameters.Add(new SqlParameter("@ApiController", tipoPrueba.ApiController));
                             using (var reader = command.ExecuteReader())
                             {
                                 while (reader.Read())
@@ -447,6 +500,5 @@ namespace DataFramework.CRUD
             }
         }
 
-        
     }
 }

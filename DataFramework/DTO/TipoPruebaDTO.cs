@@ -17,7 +17,8 @@ namespace DataFramework.DTO
         public int CantidadEjecuciones { get; set; }
         public double TiempoEjecucion { get; set; }
         public string Semilla { get; set; }
-
+        public string ApiController { get; set; }
+        public string ApiKey { get; set; }
         public HerramientaDTO Herramienta { get; set; }
         public TipoPruebaDTO() {
             HistorialEjecuciones = new List<HistorialEjecucionPruebaDTO>();

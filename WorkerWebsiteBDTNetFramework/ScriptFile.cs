@@ -1,5 +1,5 @@
-﻿using Controller;
-using Data.DTO;
+﻿using ControllerVulkano;
+using DataFramework.DTO;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -62,7 +62,7 @@ namespace WorkerWebsiteBDT
             foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
             {
                 TipoPruebaController tipoPruebaController = new TipoPruebaController();
-                int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "");
+                int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "",EstadoEnum.EnEjecucion);
 
                 string testProject = Path.Combine(GetScriptProjectPath(), @"wwwroot\uploads");
                 string destinationFolder = @"C:\Temp";
@@ -100,10 +100,11 @@ namespace WorkerWebsiteBDT
                     }
                 });
 
-                pNpmRunDist.StandardInput.WriteLine("npx cypress run test");
+                pNpmRunDist.StandardInput.WriteLine("npx cypress run test " + tipoPrueba.Parametros);
+
                 pNpmRunDist.WaitForExit();
 
-                tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "");
+                tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "",EstadoEnum.Finalizado);
             }
         }
 

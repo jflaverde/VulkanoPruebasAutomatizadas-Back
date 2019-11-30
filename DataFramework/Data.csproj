@@ -53,6 +53,7 @@
     <Compile Include="DTO\AplicacionDTO.cs" />
     <Compile Include="DTO\AppVersionDTO.cs" />
     <Compile Include="DTO\EstadoDTO.cs" />
+    <Compile Include="DTO\EstadoEnum.cs" />
     <Compile Include="DTO\EstrategiaDTO.cs" />
     <Compile Include="DTO\HerramientaDTO.cs" />
     <Compile Include="DTO\HistorialEjecucionPruebaDTO.cs" />

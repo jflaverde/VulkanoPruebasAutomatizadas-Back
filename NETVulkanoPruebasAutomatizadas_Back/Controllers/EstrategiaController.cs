@@ -9,7 +9,7 @@ using DataFramework.Messages;
 
 namespace VulkanoPruebasAutomatizadas_Back.Controllers
 {
-
+    [RoutePrefix("api/Estrategia")]
     public class EstrategiaController : ApiController
     {
         // GET: api/Estrategia
@@ -35,9 +35,16 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
             ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
             var returnMessage= estrategiaController.CreateEstrategia(estrategia);
             return returnMessage;
-           
-
         }
+
+        [HttpGet]
+        [Route("GetEstrategiaStatus/{estrategia_id:int}")]
+        public Dictionary<int, string> GetEstrategiaStatus(int estrategia_id)
+        {
+            ControllerVulkano.EstrategiaController estrategiaController = new ControllerVulkano.EstrategiaController();
+            return estrategiaController.GetEstrategiaStatus(estrategia_id);
+        }
+
         /// <summary>
         /// Post Prueba
         /// </summary>
