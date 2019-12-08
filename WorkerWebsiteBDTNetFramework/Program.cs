@@ -8,6 +8,7 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using GeneralWorkerNetFramework;
 
 namespace WorkerWebsiteBDT
 {
@@ -15,13 +16,19 @@ namespace WorkerWebsiteBDT
     {
         static void Main()
         {
+            DebugLog.EscribirLog("Inicio de la generacion del worker BDT");
             GeneralWorkerNetFramework.RabbitMQ rabbitMQ = new GeneralWorkerNetFramework.RabbitMQ();
             EstrategiaDTO strategy = rabbitMQ.GetMessages("QUEUE_BDT");
 
-            for (int i = 0; i < strategy.TipoPruebas.First().CantidadEjecuciones; i++)
+            if(strategy!=null)
             {
-                StartProcess(strategy);
+                for (int i = 0; i < strategy.TipoPruebas.First().CantidadEjecuciones; i++)
+                {
+                    StartProcess(strategy);
+                }
             }
+            DebugLog.EscribirLog("Fin de la generacion del worker BDT");
+            Environment.Exit(0);
         }
 
         /// <summary>
@@ -30,8 +37,9 @@ namespace WorkerWebsiteBDT
         /// <param name="strategy"><see cref="EstrategiaDTO"/></param>
         static void StartProcess(EstrategiaDTO strategy)
         {
-            
-
+            DebugLog.EscribirLog("Procesando la estrategia " + strategy.Estrategia_ID);
+            TipoPruebaController tipoPruebaController = new TipoPruebaController();
+            int idExecution = 0;
             try
             {
                 WorkerStatus worker = new WorkerStatus();
@@ -43,18 +51,19 @@ namespace WorkerWebsiteBDT
 
                 foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
                 {
-                    TipoPruebaController tipoPruebaController = new TipoPruebaController();
+                    DebugLog.EscribirLog("Procesando la prueba " + tipoPrueba.ID);
+                    
                     ScriptFile scriptFile = new ScriptFile();
-
-
                     //guarda en el historico de ejecucion de pruebas
-                    int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "", EstadoEnum.EnEjecucion);
-
+                    idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "", EstadoEnum.EnEjecucion);
+                    
                     //ruta donde se encuentra el archivo del script
-                    string testProject = Path.Combine(scriptFile.GetScriptProjectPath(), ConfigurationManager.AppSettings["RutaScript"]);
+                    string testProject = Path.Combine(ConfigurationManager.AppSettings["RutaScript"]);
                     //ruta destino temporal
                     string destinationFolder = @"C:\Temp";
+                    DebugLog.EscribirLog("id ejecucion " + idExecution);
                     string destinationPath = string.Concat(destinationFolder, @"\", tipoPrueba.Script.Script);
+                    DebugLog.EscribirLog(destinationPath);
                     //ruta de origen del script
                     string scriptPath = string.Concat(testProject, tipoPrueba.Script.Script, tipoPrueba.Script.Nombre, tipoPrueba.Script.Extension);
 
@@ -63,14 +72,14 @@ namespace WorkerWebsiteBDT
                     {
                         Directory.CreateDirectory(destinationPath);
                     }
-
+                    DebugLog.EscribirLog("creo ruta de temp");
                     // Extract the zip file
                     GeneralWorkerNetFramework.ActionsFile actionsFile = new GeneralWorkerNetFramework.ActionsFile();
                     actionsFile.UnzipFile(scriptPath, destinationPath);
-
                     // Create json structure file
                     //string projectPath = //@"F:\Universidad de los Andes\MISO\Pruebas Automaticas\T Grupal\-201920_MISO4208\PrestashopTest";
                     string dataDestinationFolder = Path.Combine(destinationPath, @"Prestashop.Core\fixtures\data.json");
+                    DebugLog.EscribirLog("ruta del fixtures");
                     //parametros de mockaroo
                     #region Mockaroo
                     ParametersRequest parameters = new ParametersRequest
@@ -83,18 +92,24 @@ namespace WorkerWebsiteBDT
                     int numberDataGenerated = jsonFile.GenerateData(parameters, dataDestinationFolder);
                     #endregion
                     // Reemplaza tokens del script
+                    DebugLog.EscribirLog(destinationPath);
                     #region Reemplazar tokens
                     IEnumerable<string> featureFiles = scriptFile.GetFeatureFiles(destinationPath);
                     // Replace tokens with random position object of json file
+                    DebugLog.EscribirLog("inicio del reemplazo tokens");
                     foreach (string featureFile in featureFiles)
                     {
                         scriptFile.ReplaceTokens(featureFile, numberDataGenerated);
                     }
+                    DebugLog.EscribirLog("reemplazo tokens");
                     #endregion
                     // Executes Cypress script
                     if (strategy != null)
                     {
-                        string package = Path.Combine(destinationPath, tipoPrueba.Script.Nombre, "BDT.TestProject");
+                        DebugLog.EscribirLog("ruta del package");
+
+                        string package = destinationPath + "\\" + "BDT.TestProject";
+                        DebugLog.EscribirLog("fin ruta del fixtures");
                         // Install the node modules for each of the test project
 
                         var psiNpmRunDist = new ProcessStartInfo
@@ -102,40 +117,47 @@ namespace WorkerWebsiteBDT
                             FileName = "cmd.exe",
                             RedirectStandardInput = true,
                             UseShellExecute = false,
-                            WorkingDirectory = Directory.GetParent(package).FullName
+                            WorkingDirectory = package
 
 
                         };
+                        DebugLog.EscribirLog("Abiendo CMD " + package);
+                        using (var pNpmRunDist = Process.Start(psiNpmRunDist))
+                        {
+                            StringBuilder output = new StringBuilder();
+                            pNpmRunDist.StandardInput.WriteLine("npm i");
+                            Thread.Sleep(1000);
 
-                        var pNpmRunDist = Process.Start(psiNpmRunDist);
-                        StringBuilder output = new StringBuilder();
-                        pNpmRunDist.StandardInput.WriteLine("npm i");
-                        Thread.Sleep(1000);
-
-                        pNpmRunDist.StandardInput.WriteLine("npx cypress run test " + tipoPrueba.Parametros);
-                        pNpmRunDist.WaitForExit();
+                            pNpmRunDist.StandardInput.WriteLine("npx cypress run " + tipoPrueba.Parametros);
+                            pNpmRunDist.WaitForExit(360000);
+                            pNpmRunDist.Close();
+                        }
+                        DebugLog.EscribirLog("marca como finalizado");
                         //marca como finalizado
-                        tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "", EstadoEnum.Finalizado);
                     }
                 }
 
             }
             catch (Exception ex)
             {
-
+                DebugLog.EscribirLog("error " + ex.Message);
                 Console.WriteLine("error " + ex);
+                //en caso de error envia nuevamente a la cola
+                Dispatcher rabbit = new Dispatcher();
+                rabbit.EnviaMensajes(strategy);
             }
             finally
             {
+                DebugLog.EscribirLog("Liberando el worker");
                 WorkerStatus worker = new WorkerStatus();
                 worker.WorkerID = Convert.ToInt32(ConfigurationManager.AppSettings["WorkerID"]);
                 worker.Estado.ID = 5;
                 worker.TipoPrueba = "QUEUE_BDT";
                 WorkerController workerController = new WorkerController();
                 workerController.UpdateWorkerStatus(worker);
+                DebugLog.EscribirLog("Fin del proceso de la estrategia " + strategy.Estrategia_ID);
+                tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "", EstadoEnum.WorkerLibre);
             }
-
-            
         }
     }
 }

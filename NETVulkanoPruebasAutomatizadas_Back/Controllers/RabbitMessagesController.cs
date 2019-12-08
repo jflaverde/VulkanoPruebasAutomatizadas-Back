@@ -32,7 +32,14 @@ namespace VulkanoPruebasAutomatizadas_Back.Controllers
         {
             EstrategiaController estrategiaController = new EstrategiaController();
             var newEstrategia = estrategiaController.GetEstrategia(estrategia.Estrategia_ID).First();
-            newEstrategia.TipoPruebas = estrategia.TipoPruebas;
+            List<TipoPruebaDTO> pruebas = new List<TipoPruebaDTO>();
+            foreach (var prueba in estrategia.TipoPruebas)
+            {
+                var newPrueba = newEstrategia.TipoPruebas.Find(t => t.ID == prueba.ID);
+                pruebas.Add(newPrueba);
+            }
+
+            newEstrategia.TipoPruebas = pruebas;
             Dispatcher rabbit = new Dispatcher();
             rabbit.EnviaMensajes(newEstrategia);
             return "Mensaje enviado a la Cola";

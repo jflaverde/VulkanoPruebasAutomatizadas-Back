@@ -6,6 +6,7 @@ using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Linq;
+using System.Configuration;
 
 namespace GeneralWorkerNetFramework
 {
@@ -20,7 +21,7 @@ namespace GeneralWorkerNetFramework
             var conn = ConnectionRabbitMQ();
 
             var channel = conn.CreateModel();
-            bool noAck = false;
+            bool noAck = true;
             BasicGetResult result = channel.BasicGet(queueName, noAck);
             if (result == null)
             {
@@ -52,15 +53,11 @@ namespace GeneralWorkerNetFramework
         /// <returns></returns>
         static IConnection ConnectionRabbitMQ()
         {
-            ConnectionFactory factory = new ConnectionFactory();
-            // "guest"/"guest" by default, limited to localhost connections
-            //factory.UserName = "guest";
-            //factory.Password = "guest";
-            //factory.VirtualHost = "/";
-            factory.HostName = "localhost";
-            IConnection conn = factory.CreateConnection();
+            Dispatcher dispatcher = new Dispatcher();
 
+            var conn = dispatcher.ConnectionRabbitMQ();
 
+            dispatcher.CrearColas();
 
             return conn;
         }

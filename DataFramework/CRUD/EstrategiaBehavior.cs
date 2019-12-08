@@ -175,7 +175,13 @@ namespace DataFramework.CRUD
                             T5.RUTA_APLICACION,
 							T3.TIPOPRUEBA_ID,
 							T4.NOMBRE,
-							T4.MQTIPOPRUEBA_ID
+							T4.MQTIPOPRUEBA_ID,
+							T4.CANTIDAD_EJECUCIONES,
+							T4.TIEMPO_EJECUCION,
+							T4.SEMILLA,
+							T4.API_CONTROLLER,
+							T4.API_KEY,
+							T4.PARAMETROS
                             FROM ESTRATEGIA T0 
                             INNER JOIN APLICACION T1 ON T0.APLICACION_ID=T1.APLICACION_ID
                             INNER JOIN ESTADO T2 ON T0.ESTADO_ID=T2.ESTADO_ID
@@ -234,11 +240,17 @@ namespace DataFramework.CRUD
 
                                 if(!string.IsNullOrEmpty(reader[10].ToString()))
                                 {
-                                    TipoPruebaDTO tipoPrueba = new TipoPruebaDTO()
-                                    {
-                                        ID = Convert.ToInt32(reader[10]),
-                                        Nombre = reader[11].ToString(),
-                                    };
+                                    TipoPruebaDTO tipoPrueba = new TipoPruebaDTO();
+
+                                    tipoPrueba.ID = Convert.ToInt32(reader[10]);
+                                    tipoPrueba.Nombre = reader[11].ToString();
+                                    tipoPrueba.CantidadEjecuciones = Convert.ToInt32(reader[13]);
+                                    tipoPrueba.TiempoEjecucion = Convert.ToDouble(reader[14]);
+                                    tipoPrueba.Semilla = string.IsNullOrEmpty(reader[15].ToString()) ? string.Empty : reader[15].ToString();
+                                    tipoPrueba.ApiController = string.IsNullOrEmpty(reader[16].ToString()) ? string.Empty : reader[16].ToString();
+                                    tipoPrueba.ApiKey = string.IsNullOrEmpty(reader[17].ToString()) ? string.Empty : reader[17].ToString();
+                                    tipoPrueba.Parametros = string.IsNullOrEmpty(reader[18].ToString()) ? string.Empty : reader[18].ToString();
+                                    
 
                                     MQTipoPruebaDTO mqTipo = new MQTipoPruebaDTO();
                                     if(!string.IsNullOrEmpty(reader[12].ToString()))

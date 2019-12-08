@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Text;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
@@ -69,7 +70,6 @@ namespace MonitorNetFramework
 
         }
 
-
         static byte[] CrearMensaje()
         {
             string message = "Hello World!";
@@ -77,7 +77,6 @@ namespace MonitorNetFramework
 
             return body;
         }
-
 
         /// <summary>
         /// Conexión con RabbitMQ
@@ -87,13 +86,11 @@ namespace MonitorNetFramework
         {
             ConnectionFactory factory = new ConnectionFactory();
             // "guest"/"guest" by default, limited to localhost connections
-            //factory.UserName = "guest";
-            //factory.Password = "guest";
+            factory.UserName = ConfigurationManager.AppSettings["UserID"];
+            factory.Password = ConfigurationManager.AppSettings["Pwd"];
             //factory.VirtualHost = "/";
-            factory.HostName = "localhost";
+            factory.HostName = ConfigurationManager.AppSettings["RutaRabbit"];
             IConnection conn = factory.CreateConnection();
-
-
 
             return conn;
         }
