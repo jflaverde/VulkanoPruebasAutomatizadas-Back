@@ -9,7 +9,7 @@ using RabbitMQ.Client.Events;
 using System.Linq;
 using System.Configuration;
 
-namespace MonitorNetFramework
+namespace GeneralWorkerNetFramework
 {
     public class Dispatcher
     {
@@ -21,7 +21,8 @@ namespace MonitorNetFramework
             // "guest"/"guest" by default, limited to localhost connections
             factory.UserName = ConfigurationManager.AppSettings["UserID"];
             factory.Password = ConfigurationManager.AppSettings["Pwd"];
-            //factory.VirtualHost = "/";
+            factory.Port = 5672;
+            factory.VirtualHost = "/";
             factory.HostName = ConfigurationManager.AppSettings["RutaRabbit"];
             IConnection conn = factory.CreateConnection();
 

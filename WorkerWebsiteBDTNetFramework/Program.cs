@@ -8,21 +8,27 @@ using System.Configuration;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using GeneralWorkerNetFramework;
 
 namespace WorkerWebsiteBDT
 {
     class Program
     {
-
         static void Main()
         {
+            DebugLog.EscribirLog("Inicio de la generacion del worker BDT");
             GeneralWorkerNetFramework.RabbitMQ rabbitMQ = new GeneralWorkerNetFramework.RabbitMQ();
             EstrategiaDTO strategy = rabbitMQ.GetMessages("QUEUE_BDT");
 
-            for (int i = 0; i < strategy.TipoPruebas.First().CantidadEjecuciones; i++)
+            if(strategy!=null)
             {
-                StartProcess(strategy);
+                for (int i = 0; i < strategy.TipoPruebas.First().CantidadEjecuciones; i++)
+                {
+                    StartProcess(strategy);
+                }
             }
+            DebugLog.EscribirLog("Fin de la generacion del worker BDT");
+            Environment.Exit(0);
         }
 
         /// <summary>
@@ -31,94 +37,126 @@ namespace WorkerWebsiteBDT
         /// <param name="strategy"><see cref="EstrategiaDTO"/></param>
         static void StartProcess(EstrategiaDTO strategy)
         {
-            foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
+            DebugLog.EscribirLog("Procesando la estrategia " + strategy.Estrategia_ID);
+            TipoPruebaController tipoPruebaController = new TipoPruebaController();
+            int idExecution = 0;
+            try
             {
-                TipoPruebaController tipoPruebaController = new TipoPruebaController();
-                ScriptFile scriptFile = new ScriptFile();
+                WorkerStatus worker = new WorkerStatus();
+                worker.WorkerID = Convert.ToInt32(ConfigurationManager.AppSettings["WorkerID"]);
+                worker.Estado.ID = 6;
+                worker.TipoPrueba = "QUEUE_BDT";
+                WorkerController workerController = new WorkerController();
+                workerController.UpdateWorkerStatus(worker);
 
-                //guarda en el historico de ejecucion de pruebas
-                int idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "",EstadoEnum.EnEjecucion);
-
-                //ruta donde se encuentra el archivo del script
-                string testProject = Path.Combine(scriptFile.GetScriptProjectPath(), ConfigurationManager.AppSettings["RutaScript"]);
-                //ruta destino temporal
-                string destinationFolder = @"C:\Temp";
-                string destinationPath = string.Concat(destinationFolder, @"\", tipoPrueba.Script.Script);
-                //ruta de origen del script
-                string scriptPath = string.Concat(testProject, tipoPrueba.Script.Script,tipoPrueba.Script.Nombre,tipoPrueba.Script.Extension);
-                
-                //si la ruta destino no existe se crea
-                if (!File.Exists(destinationPath))
+                foreach (TipoPruebaDTO tipoPrueba in strategy.TipoPruebas)
                 {
-                    Directory.CreateDirectory(destinationPath);
-                }
+                    DebugLog.EscribirLog("Procesando la prueba " + tipoPrueba.ID);
+                    
+                    ScriptFile scriptFile = new ScriptFile();
+                    //guarda en el historico de ejecucion de pruebas
+                    idExecution = tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, 0, "", EstadoEnum.EnEjecucion);
+                    
+                    //ruta donde se encuentra el archivo del script
+                    string testProject = Path.Combine(ConfigurationManager.AppSettings["RutaScript"]);
+                    //ruta destino temporal
+                    string destinationFolder = @"C:\Temp";
+                    DebugLog.EscribirLog("id ejecucion " + idExecution);
+                    string destinationPath = string.Concat(destinationFolder, @"\", tipoPrueba.Script.Script);
+                    DebugLog.EscribirLog(destinationPath);
+                    //ruta de origen del script
+                    string scriptPath = string.Concat(testProject, tipoPrueba.Script.Script, tipoPrueba.Script.Nombre, tipoPrueba.Script.Extension);
 
-                // Extract the zip file
-                GeneralWorkerNetFramework.ActionsFile actionsFile = new GeneralWorkerNetFramework.ActionsFile();
-                actionsFile.UnzipFile(scriptPath, destinationPath);
-
-                // Create json structure file
-                //string projectPath = //@"F:\Universidad de los Andes\MISO\Pruebas Automaticas\T Grupal\-201920_MISO4208\PrestashopTest";
-                string dataDestinationFolder = Path.Combine(destinationPath, @"Prestashop.Core\fixtures\data.json");
-                //parametros de mockaroo
-                #region Mockaroo
-                ParametersRequest parameters = new ParametersRequest
-                {
-                    ApiController = tipoPrueba.ApiController,
-                    Key = tipoPrueba.ApiKey
-                };
-
-                JsonFile jsonFile = new JsonFile();
-                int numberDataGenerated = jsonFile.GenerateData(parameters, dataDestinationFolder);
-                #endregion
-                // Reemplaza tokens del script
-                #region Reemplazar tokens
-                IEnumerable<string> featureFiles = scriptFile.GetFeatureFiles(destinationPath);
-                // Replace tokens with random position object of json file
-                foreach (string featureFile in featureFiles)
-                {
-                    scriptFile.ReplaceTokens(featureFile, numberDataGenerated);
-                }
-                #endregion
-                // Executes Cypress script
-                if (strategy != null)
-                {
-                    // Install the node modules for each of the test projects
-                    var psiNpmRunDist = new ProcessStartInfo
+                    //si la ruta destino no existe se crea
+                    if (!File.Exists(destinationPath))
                     {
-                        FileName = "cmd.exe",
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-                        UseShellExecute=false
-
-                     
+                        Directory.CreateDirectory(destinationPath);
+                    }
+                    DebugLog.EscribirLog("creo ruta de temp");
+                    // Extract the zip file
+                    GeneralWorkerNetFramework.ActionsFile actionsFile = new GeneralWorkerNetFramework.ActionsFile();
+                    actionsFile.UnzipFile(scriptPath, destinationPath);
+                    // Create json structure file
+                    //string projectPath = //@"F:\Universidad de los Andes\MISO\Pruebas Automaticas\T Grupal\-201920_MISO4208\PrestashopTest";
+                    string dataDestinationFolder = Path.Combine(destinationPath, @"Prestashop.Core\fixtures\data.json");
+                    DebugLog.EscribirLog("ruta del fixtures");
+                    //parametros de mockaroo
+                    #region Mockaroo
+                    ParametersRequest parameters = new ParametersRequest
+                    {
+                        ApiController = tipoPrueba.ApiController,
+                        Key = tipoPrueba.ApiKey
                     };
-                    var pNpmRunDist = Process.Start(psiNpmRunDist);
-                    StringBuilder output = new StringBuilder();
-                    Directory.GetDirectories(destinationPath).ToList().ForEach(p =>
-                    {
-                        string[] packageJsonFile = Directory.GetFiles(p, "package.json",SearchOption.AllDirectories);
 
-                        foreach (var package in packageJsonFile)
+                    JsonFile jsonFile = new JsonFile();
+                    int numberDataGenerated = jsonFile.GenerateData(parameters, dataDestinationFolder);
+                    #endregion
+                    // Reemplaza tokens del script
+                    DebugLog.EscribirLog(destinationPath);
+                    #region Reemplazar tokens
+                    IEnumerable<string> featureFiles = scriptFile.GetFeatureFiles(destinationPath);
+                    // Replace tokens with random position object of json file
+                    DebugLog.EscribirLog("inicio del reemplazo tokens");
+                    foreach (string featureFile in featureFiles)
+                    {
+                        scriptFile.ReplaceTokens(featureFile, numberDataGenerated);
+                    }
+                    DebugLog.EscribirLog("reemplazo tokens");
+                    #endregion
+                    // Executes Cypress script
+                    if (strategy != null)
+                    {
+                        DebugLog.EscribirLog("ruta del package");
+
+                        string package = destinationPath + "\\" + "BDT.TestProject";
+                        DebugLog.EscribirLog("fin ruta del fixtures");
+                        // Install the node modules for each of the test project
+
+                        var psiNpmRunDist = new ProcessStartInfo
                         {
-                            pNpmRunDist.StandardInput.WriteLine(Path.GetPathRoot(package).Replace(@"\", ""));
-                            pNpmRunDist.StandardInput.WriteLine(string.Format("cd {0}", Directory.GetParent(package)));
+                            FileName = "cmd.exe",
+                            RedirectStandardInput = true,
+                            UseShellExecute = false,
+                            WorkingDirectory = package
+
+
+                        };
+                        DebugLog.EscribirLog("Abiendo CMD " + package);
+                        using (var pNpmRunDist = Process.Start(psiNpmRunDist))
+                        {
+                            StringBuilder output = new StringBuilder();
                             pNpmRunDist.StandardInput.WriteLine("npm i");
                             Thread.Sleep(1000);
-                        }
-                    });
 
-                    pNpmRunDist.StandardInput.WriteLine("npx cypress run test " + tipoPrueba.Parametros);
-                    while (!pNpmRunDist.StandardOutput.EndOfStream)
-                    {
-                        output.AppendLine(pNpmRunDist.StandardOutput.ReadLine());
-                        // do something with line
+                            pNpmRunDist.StandardInput.WriteLine("npx cypress run " + tipoPrueba.Parametros);
+                            pNpmRunDist.WaitForExit(360000);
+                            pNpmRunDist.Close();
+                        }
+                        DebugLog.EscribirLog("marca como finalizado");
+                        //marca como finalizado
                     }
-                    Console.WriteLine(output);
-                    //pNpmRunDist.WaitForExit();
-                    //marca como finalizado
-                    tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "",EstadoEnum.Finalizado);
                 }
+
+            }
+            catch (Exception ex)
+            {
+                DebugLog.EscribirLog("error " + ex.Message);
+                Console.WriteLine("error " + ex);
+                //en caso de error envia nuevamente a la cola
+                Dispatcher rabbit = new Dispatcher();
+                rabbit.EnviaMensajes(strategy);
+            }
+            finally
+            {
+                DebugLog.EscribirLog("Liberando el worker");
+                WorkerStatus worker = new WorkerStatus();
+                worker.WorkerID = Convert.ToInt32(ConfigurationManager.AppSettings["WorkerID"]);
+                worker.Estado.ID = 5;
+                worker.TipoPrueba = "QUEUE_BDT";
+                WorkerController workerController = new WorkerController();
+                workerController.UpdateWorkerStatus(worker);
+                DebugLog.EscribirLog("Fin del proceso de la estrategia " + strategy.Estrategia_ID);
+                tipoPruebaController.InsertEjecucionTipoPrueba(strategy.Estrategia_ID, strategy.TipoPruebas[0].ID, idExecution, "", EstadoEnum.WorkerLibre);
             }
         }
     }

@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AplicacionController.cs" />
+    <Compile Include="AppVersionController.cs" />
     <Compile Include="EstrategiaController.cs" />
     <Compile Include="HerramientaController.cs" />
     <Compile Include="MQTipoPruebaController.cs" />

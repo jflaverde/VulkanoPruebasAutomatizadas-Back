@@ -18,7 +18,7 @@ namespace DataFramework.CRUD
         {
             ReturnMessage mensaje = new ReturnMessage();
             string query = @"SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
-                            INSERT INTO APLICACION (NOMBRE,APLICACION_VERSION,RUTA_APLICACION,ES_WEB,DESCRIPCION) VALUES (@NOMBRE,@APLICACION_VERSION,@RUTA_APLICACION,@ES_WEB,@DESCRIPCION)
+                            INSERT INTO APLICACION (NOMBRE,ES_WEB,DESCRIPCION) VALUES (@NOMBRE,@ES_WEB,@DESCRIPCION)
 
                             SELECT @@IDENTITY AS 'Identity';";
 
@@ -30,9 +30,7 @@ namespace DataFramework.CRUD
                 {
                     using (SqlCommand command = new SqlCommand(query, con))
                     {
-                        command.Parameters.Add(new SqlParameter("@NOMBRE", !string.IsNullOrEmpty(aplicacion.Nombre)?aplicacion.Nombre:string.Empty));
-                        command.Parameters.Add(new SqlParameter("@APLICACION_VERSION", !string.IsNullOrEmpty(aplicacion.Version)?aplicacion.Version:string.Empty));
-                        command.Parameters.Add(new SqlParameter("@RUTA_APLICACION", !string.IsNullOrEmpty(aplicacion.Ruta_Aplicacion)?aplicacion.Ruta_Aplicacion:string.Empty));
+                        command.Parameters.Add(new SqlParameter("@NOMBRE", !string.IsNullOrEmpty(aplicacion.Nombre) ? aplicacion.Nombre : string.Empty));
                         command.Parameters.Add(new SqlParameter("@ES_WEB", aplicacion.Es_Web));
                         command.Parameters.Add(new SqlParameter("@DESCRIPCION", !string.IsNullOrEmpty(aplicacion.Descripcion)?aplicacion.Descripcion:string.Empty));
 
@@ -213,8 +211,6 @@ namespace DataFramework.CRUD
 							SELECT 
 							APLICACION_ID,
 							NOMBRE,
-							APLICACION_VERSION,
-							RUTA_APLICACION,
 							ES_WEB,
 							DESCRIPCION
 							FROM APLICACION");
@@ -243,10 +239,8 @@ namespace DataFramework.CRUD
                                 {
                                     Aplicacion_ID = Convert.ToInt32(reader[0]),
                                     Nombre = reader[1].ToString(),
-                                    Version = reader[2].ToString(),
-                                    Ruta_Aplicacion = reader[3].ToString(),
-                                    Es_Web = Convert.ToInt32(reader[4]) == 1 ? true : false,
-                                    Descripcion = reader[5].ToString()
+                                    Es_Web = Convert.ToInt32(reader[2]) == 1 ? true : false,
+                                    Descripcion = reader[3].ToString()
                                 };
                                 listaAplicaciones.Add(aplicacion);
                             }
